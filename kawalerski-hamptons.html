@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kawalerski Willa Hamptons – Konfigurator atrakcji</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0f1923;--card:#162231;--card2:#1a2a3d;--border:#243447;
+  --text:#e0e6ed;--muted:#7a8fa6;--accent:#4ade80;--accent2:#3b82f6;
+  --tag-water:#06b6d4;--tag-adrenaline:#ef4444;--tag-villa:#a855f7;
+  --tag-warsaw:#f59e0b;--tag-chill:#22c55e;--tag-must:#ffd700;
+}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+.container{max-width:960px;margin:0 auto;padding:20px 16px 60px}
+h1{font-size:1.6rem;font-weight:800;margin-bottom:4px;color:#fff}
+.subtitle{color:var(--muted);font-size:.9rem;margin-bottom:20px}
+
+.info-box{background:linear-gradient(135deg,#1a2a3d,#243447);border-left:3px solid var(--accent);border-radius:10px;padding:16px 20px;margin-bottom:24px;font-size:.9rem}
+.info-box strong{color:#fff}
+.info-box .included{color:var(--accent);font-size:.85rem;margin-top:6px;display:block}
+
+.section-title{font-size:.78rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:28px 0 10px;display:flex;align-items:center;gap:8px}
+.section-title::before{content:'';display:inline-block;width:4px;height:14px;background:var(--accent);border-radius:2px}
+
+.controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;padding:14px;background:var(--card);border-radius:10px;margin-bottom:8px}
+.control-group{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--muted)}
+.control-input{background:var(--bg);border:1px solid var(--border);border-radius:6px;color:#fff;padding:5px 10px;width:70px;font-size:.88rem;text-align:center}
+.control-input:focus{outline:none;border-color:var(--accent)}
+
+.category{margin-bottom:8px}
+.cat-label{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#fff;margin:18px 0 8px;padding:6px 12px;background:var(--card);border-radius:6px;display:inline-block}
+
+.attr-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:720px){.attr-grid{grid-template-columns:1fr}}
+
+.attr-card{background:var(--card);border:2px solid var(--border);border-radius:10px;padding:14px;cursor:pointer;transition:all .2s;user-select:none;position:relative;display:flex;flex-direction:column}
+.attr-card.checked{border-color:var(--accent);background:rgba(74,222,128,.06)}
+.attr-card:hover{border-color:rgba(74,222,128,.5)}
+.attr-head{display:flex;align-items:flex-start;gap:10px;margin-bottom:6px}
+.attr-check{width:22px;height:22px;border-radius:6px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:all .2s}
+.attr-card.checked .attr-check{background:var(--accent);border-color:var(--accent)}
+.attr-check svg{width:13px;height:13px;opacity:0;transition:opacity .15s}
+.attr-card.checked .attr-check svg{opacity:1}
+.attr-name{font-weight:600;font-size:.95rem;color:#fff;line-height:1.3;flex:1}
+.attr-name a{color:#7dd3fc;text-decoration:none;border-bottom:1px dashed rgba(125,211,252,.3)}
+.attr-name a:hover{border-bottom-style:solid}
+.attr-desc{color:var(--muted);font-size:.82rem;line-height:1.5;margin-left:32px;margin-bottom:8px;flex:1}
+.attr-bottom{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-left:32px;flex-wrap:wrap}
+.attr-price{display:flex;align-items:center;gap:4px}
+.attr-price-input{background:var(--bg);border:1px solid var(--border);border-radius:5px;color:#fff;padding:3px 6px;width:65px;font-size:.82rem;text-align:right}
+.attr-price-input:focus{outline:none;border-color:var(--accent)}
+.attr-price-unit{color:var(--muted);font-size:.78rem}
+.attr-tag{font-size:.68rem;font-weight:600;padding:2px 7px;border-radius:4px;text-transform:lowercase}
+.tag-water{background:rgba(6,182,212,.18);color:var(--tag-water)}
+.tag-adrenaline{background:rgba(239,68,68,.18);color:var(--tag-adrenaline)}
+.tag-villa{background:rgba(168,85,247,.18);color:var(--tag-villa)}
+.tag-warsaw{background:rgba(245,158,11,.18);color:var(--tag-warsaw)}
+.tag-chill{background:rgba(34,197,94,.18);color:var(--tag-chill)}
+.tag-must{background:rgba(255,215,0,.18);color:var(--tag-must)}
+
+.attr-card .note{color:#f59e0b;font-size:.72rem;margin-left:32px;margin-top:-4px;margin-bottom:6px}
+
+/* Summary */
+.summary-box{background:var(--card);border-radius:12px;overflow:hidden;margin-top:10px;position:sticky;bottom:14px;box-shadow:0 8px 24px rgba(0,0,0,.35);border:1px solid var(--border)}
+.summary-top{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border)}
+.summary-cell{padding:16px 22px}
+.summary-cell+.summary-cell{border-left:1px solid var(--border);background:var(--card2)}
+.summary-label{font-size:.72rem;color:var(--muted);margin-bottom:4px;letter-spacing:.08em;text-transform:uppercase}
+.summary-value{font-size:1.7rem;font-weight:800;color:#fff;line-height:1.1}
+.summary-value.accent{color:var(--accent)}
+.summary-sub{font-size:.82rem;color:var(--muted);margin-top:3px}
+.toggle-details{text-align:center;padding:8px;font-size:.8rem;color:var(--accent);cursor:pointer;border-top:1px solid var(--border)}
+.toggle-details:hover{background:rgba(74,222,128,.04)}
+.breakdown{display:none;max-height:340px;overflow-y:auto}
+.breakdown.open{display:block}
+.breakdown-row{display:flex;justify-content:space-between;align-items:center;padding:10px 22px;border-top:1px solid var(--border);font-size:.85rem}
+.breakdown-name{color:var(--text)}
+.breakdown-price{color:#fff;font-weight:600;white-space:nowrap}
+
+/* Schedule */
+.schedule{margin-top:10px}
+.day-card{background:var(--card);border-radius:10px;padding:14px 18px;margin-bottom:8px;border-left:3px solid var(--accent)}
+.day-label{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:3px}
+.day-title{font-weight:600;color:#fff;font-size:.95rem;margin-bottom:3px}
+.day-desc{font-size:.82rem;color:var(--muted);line-height:1.5}
+
+.reset-btn{background:none;border:1px solid var(--border);color:var(--muted);padding:6px 14px;border-radius:6px;cursor:pointer;font-size:.82rem;margin-left:auto}
+.reset-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+@media(max-width:500px){
+  .summary-value{font-size:1.35rem}
+  .summary-cell{padding:13px 16px}
+  .breakdown-row{padding:8px 16px;font-size:.8rem}
+  .attr-card{padding:12px}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Kawalerski – Willa Hamptons</h1>
+  <p class="subtitle">Huta Podgórna (gmina Somianka) · 8–10 maja 2026 · 19 osób</p>
+
+  <div class="info-box">
+    <strong>Lokalizacja:</strong> 8 km od Serocka, ~22 km od Legionowa, 40 min od Warszawy. W pobliżu Zalew Zegrzyński, Puszcza Biała.<br>
+    <strong>Willa ma już:</strong> <span class="included">sauna · jacuzzi · basen · sala kinowa · bilard · kominek · miejsce na ognisko · ~500 m²</span>
+  </div>
+
+  <div class="controls">
+    <div class="control-group">Grupa: <input type="number" class="control-input" id="groupSize" value="19" min="1" max="50" oninput="recalc()"> osób</div>
+    <div class="control-group">Dni: <input type="number" class="control-input" id="dayCount" value="2" min="1" max="7" oninput="recalc()"></div>
+    <button class="reset-btn" onclick="resetAll()">Odznacz wszystko</button>
+  </div>
+
+  <div class="section-title">Atrakcje</div>
+  <div id="categories"></div>
+
+  <div class="summary-box">
+    <div class="summary-top">
+      <div class="summary-cell">
+        <div class="summary-label">Budżet całkowity (nocleg + atrakcje)</div>
+        <div class="summary-value" id="totalPLN">0 PLN</div>
+        <div class="summary-sub" id="itemCount">0 pozycji</div>
+      </div>
+      <div class="summary-cell">
+        <div class="summary-label">Na osobę</div>
+        <div class="summary-value accent" id="perPLN">0 PLN</div>
+        <div class="summary-sub">przy <span id="groupSizeLabel">19</span> os.</div>
+      </div>
+    </div>
+    <div class="toggle-details" onclick="toggleBreakdown()">Pokaż rozbicie kosztów ▾</div>
+    <div class="breakdown" id="breakdown"></div>
+  </div>
+
+  <div class="section-title">Propozycja planu</div>
+  <div class="schedule">
+    <div class="day-card">
+      <div class="day-label">Piątek 8.05 · wieczór</div>
+      <div class="day-title">Przyjazd + survival pod willą</div>
+      <div class="day-desc">Zakwaterowanie, Survivor Group w lesie obok willi (survival + ognisko z kociołkiem). Powrót: sauna, jacuzzi, piwo, bilard. Opcja: mobilna bania już na miejscu.</div>
+    </div>
+    <div class="day-card">
+      <div class="day-label">Sobota 9.05 · dzień atrakcji</div>
+      <div class="day-title">Rejs / strzelanie / quady</div>
+      <div class="day-desc">Rano: rejs statkiem Albatros z Nieporętu (2h + catering). Popołudnie: strzelnica Marynino lub QuadFun. Wieczór: BBQ master + DJ w willi, ewentualnie ruska bania.</div>
+    </div>
+    <div class="day-card">
+      <div class="day-label">Niedziela 10.05 · wyjazd</div>
+      <div class="day-title">Chillout + zwiedzanie</div>
+      <div class="day-desc">Leniwy poranek. Opcjonalnie: Twierdza Zegrze / Fort Beniaminów z przewodnikiem, lub Pułtusk / Jabłonna. Wyjazd.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// type: "per_person" | "fixed"
+// priceNote: optional hint that appears below price
+const ATTRACTIONS = [
+  // ======= NOCLEG =======
+  {cat:"Nocleg (koszt bazowy)",
+   id:"nocleg", name:"Willa Hamptons – 2 noce (8-10.05)",
+   desc:'Cała willa na wyłączność: 500 m², sypialnie dla 19 osób, sauna, jacuzzi, basen, sala kinowa, bilard, kominek, miejsce na ognisko. W cenie: cały obiekt bez ograniczeń.',
+   price:8092, type:"fixed", tag:"must", on:true, priceNote:"cena stała za cały obiekt"},
+
+  // ======= PRZY WILLI (dojazd pod drzwi) =======
+  {cat:"Przy Willi (dojazd pod drzwi)",
+   id:"survivor_group",  name:'<a href="https://survivorgroup.pl" target="_blank">Survivor Group – survival pod willą</a>',
+   desc:'Instruktorzy przyjeżdżają pod willę, prowadzą survival w okolicznym lesie: rozpalanie ognia, orientacja, sygnalizacja. Zakończenie ogniskiem z kociołkiem. Do wyboru: strzelanie z łuku, paintball, kajaki.',
+   price:280, type:"per_person", tag:"villa", on:true, priceNote:"orientacyjnie 250-350 zł/os"},
+
+  {cat:"Przy Willi (dojazd pod drzwi)",
+   id:"sas",  name:'<a href="https://survival-sas.pl" target="_blank">SAS – Survival Adventure Squad</a>',
+   desc:'Tor linowy, skok wahadłowy z 6m, strzelanie z łuku, ognisko z kiełbachą. Min. 10 osób. Konkurencja dla Survivor Group.',
+   price:450, type:"per_person", tag:"villa", on:false, priceNote:"450 zł/os – program pełny"},
+
+  {cat:"Przy Willi (dojazd pod drzwi)",
+   id:"bania", name:'<a href="https://baniawynajem.pl" target="_blank">Mobilna ruska bania</a>',
+   desc:'Przyczepka z banią przyjeżdża pod willę, ekipa montuje i tłumaczy obsługę. Drewno opałowe i lód wliczone. Średnica 200 cm, 6-8 osób na raz – rotacja na imprezie.',
+   price:600, type:"fixed", tag:"villa", on:true, priceNote:"400-600 zł za weekend"},
+
+  {cat:"Przy Willi (dojazd pod drzwi)",
+   id:"dj", name:"DJ + nagłośnienie pod willę",
+   desc:'DJ z własnym sprzętem, reflektory, efekty. Gra od 20:00 do 02:00+. Willa ma 500 m², taras z jacuzzi, salon – idealnie do grania.',
+   price:2000, type:"fixed", tag:"villa", on:true, priceNote:"1500-3000 zł za wieczór"},
+
+  {cat:"Przy Willi (dojazd pod drzwi)",
+   id:"barman", name:'<a href="https://barside.pl" target="_blank">Warsztaty barmańskie (BarSide)</a>',
+   desc:'Barman przyjeżdża z mobilnym barem. 2h warsztatów: koktajle, shotki, flair. Każdy miksuje sam, degustacja. Można rozwinąć w wieczorny bar.',
+   price:250, type:"per_person", tag:"villa", on:false, priceNote:"200-300 zł/os za 2h"},
+
+  {cat:"Przy Willi (dojazd pod drzwi)",
+   id:"bbq", name:'<a href="https://zlotylin.pl" target="_blank">BBQ master / catering (Złoty Okoń)</a>',
+   desc:'Pieczone prosięcie, żeberka, kociołek nad ogniskiem. Kucharz przyjeżdża, robi show, obsługa. Alternatywa: zamówienie cateringu zimny/grill.',
+   price:120, type:"per_person", tag:"villa", on:true, priceNote:"100-150 zł/os"},
+
+  // ======= ZALEW ZEGRZYŃSKI / WODNE =======
+  {cat:"Zalew Zegrzyński – wodne",
+   id:"albatros", name:'<a href="https://www.zeglugamazowiecka.pl" target="_blank">Statek Albatros – rejs 2h</a>',
+   desc:'Wynajem całego statku z załogą, start z przystani Nieporęt (15 min od willi). Maks. 25 os. z cateringiem (idealnie dla 19). Cena stała za rejs, nie za osobę.',
+   price:4000, type:"fixed", tag:"must", on:true, priceNote:"4000 zł / 2h z Nieporętu"},
+
+  {cat:"Zalew Zegrzyński – wodne",
+   id:"flyboard", name:'<a href="https://flyboard.pl" target="_blank">Flyboard Polska (Zegrze Płd.)</a>',
+   desc:'Deska odrzutowa podłączona do skutera wodnego – lot 8-10m nad wodą. Plaża Hotelu 500, ul. Warszawska 31A. Sezon od maja. Kontakt: +48 796 456 333.',
+   price:200, type:"per_person", tag:"adrenaline", on:false, priceNote:"15 min/os – nie każdy chce"},
+
+  {cat:"Zalew Zegrzyński – wodne",
+   id:"water_club", name:"Water-Club (Nieporęt) – 3 łodzie bez patentu",
+   desc:'Wypożyczenie 3 małych łodzi (5-6 os. każda), silniki 10 KM bez patentu. Własna muzyka, lodówka, jazda po Zalewie. ~400 zł za 4h / łódź.',
+   price:1200, type:"fixed", tag:"water", on:false, priceNote:"3 łodzie × 400 zł / 4h"},
+
+  {cat:"Zalew Zegrzyński – wodne",
+   id:"wake", name:'<a href="https://wakeschool.pl" target="_blank">Wakeschool Zegrze (wakeboard)</a>',
+   desc:'Motorówka Axis A22 (350 KM), kapitan-instruktor, 11 os. na raz. Wakeboard, wakesurf, banan, kółka. Sprzęt + pianki w cenie.',
+   price:350, type:"per_person", tag:"water", on:false, priceNote:"wycena indywidualna"},
+
+  {cat:"Zalew Zegrzyński – wodne",
+   id:"kayak", name:'<a href="https://kajakiserock.pl" target="_blank">Kajaki Serock – spływ Narwią</a>',
+   desc:'Spływ 2-3h z nurtem do Serocka, przerwa na dzikiej plaży z grillem. Organizator wiezie na start. Najtańsza opcja wodna.',
+   price:40, type:"per_person", tag:"chill", on:false, priceNote:"60-80 zł / kajak 2-osobowy"},
+
+  // ======= ADRENALINA / BROŃ / MOTOR =======
+  {cat:"Adrenalina / broń / motor",
+   id:"ksm9", name:'<a href="https://ksm9.pl" target="_blank">Strzelnica Marynino (KSM9)</a>',
+   desc:'Kryta strzelnica 5 min od Serocka. Pakiet startowy: AK-47, AR-15, Glock, strzelba. Instruktor, bez patentów. Najbliższa strzelnica od willi.',
+   price:170, type:"per_person", tag:"adrenaline", on:true, priceNote:"140-240 zł/os zależnie od pakietu"},
+
+  {cat:"Adrenalina / broń / motor",
+   id:"quadfun", name:'<a href="https://quadfun.pl" target="_blank">QuadFun – tor quadowy</a>',
+   desc:'Największy tor quadowy w Polsce, 6 ha, 25 km od Warszawy (ok. 1h od willi). Specjalizują się w kawalerskich, busy z Warszawy w cenie pakietu.',
+   price:280, type:"per_person", tag:"adrenaline", on:false, priceNote:"zależnie od pakietu"},
+
+  {cat:"Adrenalina / broń / motor",
+   id:"offroad", name:"Off-road 4x4 (CSE Autek, Józefów)",
+   desc:'Nissan Terrano / Jeep Cherokee po torze błotnym, z instruktorem lub samodzielnie po zapoznaniu. Na 3-4 osoby w aucie. ~1500-1800 zł/samochód.',
+   price:3000, type:"fixed", tag:"adrenaline", on:false, priceNote:"2 auta × ~1500 zł"},
+
+  {cat:"Adrenalina / broń / motor",
+   id:"paintball_zegrze", name:'<a href="https://nadzegrzem.pl/specnaz-paintball-zegrze/" target="_blank">Paintball Zegrze (NadZegrzem.pl)</a>',
+   desc:'Pole nad Zalewem Zegrzyńskim, scenariusze militarne: odbijanie zakładnika (Pan Młody!), obrona bazy, granaty dymne. Ok. 500 kulek/os.',
+   price:140, type:"per_person", tag:"adrenaline", on:false, priceNote:"120-160 zł/os"},
+
+  {cat:"Adrenalina / broń / motor",
+   id:"balloon", name:"Lot balonem na uwięzi (Zegrze)",
+   desc:'Balon na linach – 50-60m nad ziemią, kosz po 3-4 osoby. Każdy "wznosi się" 10-15 min. Ekipa przyjeżdża pod ustalone miejsce. Atrakcja premium.',
+   price:2000, type:"fixed", tag:"adrenaline", on:false, priceNote:"1500-2500 zł za 2-3h"},
+
+  // ======= WARSZAWA (wyjazd) =======
+  {cat:"Warszawa (dojazd ~40 min)",
+   id:"axe", name:'<a href="https://www.unitedaxethrowers.com" target="_blank">United Axe Throwers (Mokotów)</a>',
+   desc:'7 torów do rzucania siekierami, własny bar, miejsce dla 60 osób. Turniej grupowy, 1,5h sesja. Jeden z najstarszych klubów w PL.',
+   price:70, type:"per_person", tag:"warsaw", on:false, priceNote:"60-80 zł/os za sesję"},
+
+  {cat:"Warszawa (dojazd ~40 min)",
+   id:"bubble", name:'<a href="https://gmoodsball.pl/wieczor-kawalerski-warszawa-bubble-football/" target="_blank">Bubble football (Funny Football Center)</a>',
+   desc:'Piłka nożna w dmuchanych kulach, 10 kul + sędzia. Ok. 70 min gry. Pan Młody w oranżowym kombinezonie – symbol dobrego zwyczaju.',
+   price:90, type:"per_person", tag:"warsaw", on:false, priceNote:"ok. 90 zł/os"},
+
+  // ======= ZWIEDZANIE / CHILLOUT =======
+  {cat:"Zwiedzanie / chillout",
+   id:"twierdza_zegrze", name:"Twierdza Zegrze / Fort Beniaminów",
+   desc:'Rosyjskie forty z przełomu XIX/XX w., Prochownia Wschodnia – klimatyczne ruiny, klimat urbex. Wstęp wolny, można z przewodnikiem.',
+   price:0, type:"fixed", tag:"chill", on:false, priceNote:"bezpłatnie (bez przewodnika)"},
+
+  {cat:"Zwiedzanie / chillout",
+   id:"pultusk", name:"Pułtusk – najdłuższy rynek w Europie",
+   desc:'~17 km od willi. Rynek, zamek, lody u Romana, gondole. Dobry przystanek na niedzielę przed powrotem.',
+   price:0, type:"fixed", tag:"chill", on:false, priceNote:"koszty własne"},
+
+  {cat:"Zwiedzanie / chillout",
+   id:"modlin", name:"Twierdza Modlin",
+   desc:'Potężne XIX-wieczne fortyfikacje przy ujściu Narwi, ~40 km. Koszary Napoleona, wieża czerwona. Zwiedzanie 2-3h.',
+   price:20, type:"per_person", tag:"chill", on:false, priceNote:"~20 zł/os bilet"},
+
+  {cat:"Zwiedzanie / chillout",
+   id:"jablonna", name:"Pałac w Jabłonnie",
+   desc:'XVIII-wieczny pałac z parkiem, 20 km od willi. Spokojne zwiedzanie, restauracja na miejscu.',
+   price:15, type:"per_person", tag:"chill", on:false, priceNote:"~15 zł/os"},
+];
+
+let breakdownOpen = false;
+
+function tagLabel(t){
+  const map = {'water':'woda','adrenaline':'adrenalina','villa':'w willi','warsaw':'Warszawa','chill':'chill','must':'must-have'};
+  return map[t] || t;
+}
+
+function render() {
+  const byCategory = {};
+  ATTRACTIONS.forEach(a => {
+    if (!byCategory[a.cat]) byCategory[a.cat] = [];
+    byCategory[a.cat].push(a);
+  });
+
+  const container = document.getElementById('categories');
+  let html = '';
+
+  for (const [cat, items] of Object.entries(byCategory)) {
+    html += `<div class="cat-label">${cat}</div><div class="attr-grid">`;
+    items.forEach(a => {
+      const checked = a.on;
+      const unit = a.type === 'per_person' ? 'zł/os' : 'zł';
+      html += `<div class="attr-card${checked?' checked':''}" onclick="toggleAttr('${a.id}', event)">
+        <div class="attr-head">
+          <div class="attr-check"><svg viewBox="0 0 13 13" fill="none"><path d="M2 6.5l3 3L11 3.5" stroke="#0f1923" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="attr-name">${a.name}</div>
+        </div>
+        <div class="attr-desc">${a.desc}</div>
+        ${a.priceNote ? `<div class="note">${a.priceNote}</div>` : ''}
+        <div class="attr-bottom">
+          <div class="attr-price" onclick="event.stopPropagation()">
+            <input type="number" class="attr-price-input" value="${a.price}" min="0" step="10" onchange="updatePrice('${a.id}', this.value)">
+            <span class="attr-price-unit">${unit}</span>
+          </div>
+          <span class="attr-tag tag-${a.tag}">${tagLabel(a.tag)}</span>
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+  container.innerHTML = html;
+}
+
+function toggleAttr(id, e) {
+  const a = ATTRACTIONS.find(x => x.id === id);
+  if (!a) return;
+  a.on = !a.on;
+  render();
+  recalc();
+}
+
+function updatePrice(id, val) {
+  const a = ATTRACTIONS.find(x => x.id === id);
+  if (!a) return;
+  a.price = parseFloat(val) || 0;
+  recalc();
+}
+
+function resetAll() {
+  ATTRACTIONS.forEach(a => { a.on = false; });
+  render();
+  recalc();
+}
+
+function fmt(n) {
+  return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+}
+
+function recalc() {
+  const group = parseInt(document.getElementById('groupSize').value) || 19;
+  let total = 0;
+  let count = 0;
+  const rows = [];
+
+  ATTRACTIONS.filter(a => a.on).forEach(a => {
+    let cost = a.type === 'per_person' ? a.price * group : a.price;
+    total += cost;
+    count++;
+    const label = a.type === 'per_person' ? `${a.price} zł × ${group}` : 'stała';
+    rows.push({name: a.name.replace(/<[^>]+>/g, ''), price: cost, label});
+  });
+
+  const perPerson = group > 0 ? Math.round(total / group) : 0;
+  document.getElementById('totalPLN').textContent = fmt(total) + ' PLN';
+  document.getElementById('perPLN').textContent = fmt(perPerson) + ' PLN';
+  document.getElementById('itemCount').textContent = count + ' ' + (count === 1 ? 'pozycja' : count < 5 ? 'pozycje' : 'pozycji');
+  document.getElementById('groupSizeLabel').textContent = group;
+
+  const bEl = document.getElementById('breakdown');
+  if (rows.length === 0) {
+    bEl.innerHTML = `<div class="breakdown-row"><span class="breakdown-name" style="color:var(--muted)">Nic nie wybrano</span><span></span></div>`;
+  } else {
+    bEl.innerHTML = rows.map(r =>
+      `<div class="breakdown-row">
+        <span class="breakdown-name">${r.name} <small style="color:var(--muted)">(${r.label})</small></span>
+        <span class="breakdown-price">${fmt(r.price)} PLN</span>
+      </div>`
+    ).join('') + `<div class="breakdown-row" style="background:rgba(74,222,128,.05);font-weight:700">
+      <span class="breakdown-name">Razem</span>
+      <span class="breakdown-price">${fmt(total)} PLN · ${fmt(perPerson)} PLN/os</span>
+    </div>`;
+  }
+}
+
+function toggleBreakdown() {
+  breakdownOpen = !breakdownOpen;
+  document.getElementById('breakdown').classList.toggle('open', breakdownOpen);
+  document.querySelector('.toggle-details').textContent = breakdownOpen ? 'Schowaj rozbicie ▴' : 'Pokaż rozbicie kosztów ▾';
+}
+
+render();
+recalc();
+</script>
+</body>
+</html>

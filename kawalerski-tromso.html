@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kawalerski Tromsø – Kalkulator kosztów</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0f1923;--card:#162231;--card2:#1a2a3d;--border:#243447;
+  --text:#e0e6ed;--muted:#7a8fa6;--accent:#4ade80;--accent2:#3b82f6;
+  --tag-adrenalina:#ef4444;--tag-must:#f59e0b;--tag-unikalne:#a855f7;
+  --tag-obowiazkowe:#f59e0b;--tag-lifestyle:#22c55e;--tag-wieczor:#3b82f6;
+  --tag-aktywnosc:#06b6d4;
+}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+.container{max-width:880px;margin:0 auto;padding:20px 16px 60px}
+h1{font-size:1.5rem;font-weight:700;margin-bottom:4px;color:#fff}
+.subtitle{color:var(--muted);font-size:.9rem;margin-bottom:28px}
+.section-title{font-size:.8rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:28px 0 12px}
+.section-title:first-of-type{margin-top:0}
+
+/* Group toggle */
+.group-toggle{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px}
+.group-btn{background:var(--card);border:2px solid var(--border);border-radius:10px;padding:14px;text-align:center;cursor:pointer;transition:all .2s}
+.group-btn.active{border-color:var(--accent);background:rgba(74,222,128,.08)}
+.group-btn .num{font-size:1.3rem;font-weight:700;color:#fff}
+.group-btn .detail{font-size:.8rem;color:var(--muted);margin-top:2px}
+.group-btn:hover{border-color:var(--accent)}
+.more-btn{position:absolute;right:0;top:0;background:none;border:none;color:var(--muted);font-size:1.2rem;cursor:pointer;padding:4px 8px}
+
+/* Attractions grid */
+.attractions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:600px){.attractions{grid-template-columns:1fr}}
+.attr-card{background:var(--card);border:2px solid var(--border);border-radius:10px;padding:14px 14px 10px;cursor:pointer;transition:all .2s;position:relative;user-select:none}
+.attr-card.checked{border-color:var(--accent);background:rgba(74,222,128,.06)}
+.attr-card:hover{border-color:rgba(74,222,128,.5)}
+.attr-top{display:flex;align-items:flex-start;gap:10px}
+.attr-check{width:22px;height:22px;border-radius:6px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:all .2s}
+.attr-card.checked .attr-check{background:var(--accent);border-color:var(--accent)}
+.attr-check svg{width:14px;height:14px;opacity:0;transition:opacity .15s}
+.attr-card.checked .attr-check svg{opacity:1}
+.attr-name{font-weight:600;font-size:.95rem;color:#fff;line-height:1.3}
+.attr-price{font-size:.82rem;color:var(--muted);margin-top:3px;margin-left:32px}
+.attr-tag{display:inline-block;font-size:.7rem;font-weight:600;padding:2px 8px;border-radius:4px;margin-top:6px;margin-left:32px}
+.tag-adrenalina{background:rgba(239,68,68,.18);color:var(--tag-adrenalina)}
+.tag-must-have{background:rgba(245,158,11,.18);color:var(--tag-must)}
+.tag-unikalne{background:rgba(168,85,247,.18);color:var(--tag-unikalne)}
+.tag-obowiazkowe{background:rgba(245,158,11,.18);color:var(--tag-obowiazkowe)}
+.tag-lifestyle{background:rgba(34,197,94,.18);color:var(--tag-lifestyle)}
+.tag-wieczor{background:rgba(59,130,246,.18);color:var(--tag-wieczor)}
+.tag-aktywnosc{background:rgba(6,182,212,.18);color:var(--tag-aktywnosc)}
+
+/* Summary */
+.summary-box{background:var(--card);border-radius:12px;overflow:hidden;margin-top:8px}
+.summary-top{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border)}
+.summary-cell{padding:20px 24px}
+.summary-cell+.summary-cell{border-left:1px solid var(--border);background:var(--card2)}
+.summary-label{font-size:.78rem;color:var(--muted);margin-bottom:4px}
+.summary-value{font-size:1.8rem;font-weight:800;color:#fff;line-height:1.1}
+.summary-value.accent{color:var(--accent)}
+.summary-sub{font-size:.82rem;color:var(--muted);margin-top:2px}
+.breakdown{padding:0}
+.breakdown-row{display:flex;justify-content:space-between;align-items:center;padding:12px 24px;border-top:1px solid var(--border);font-size:.88rem}
+.breakdown-row:last-child{font-weight:700;background:rgba(74,222,128,.04);border-top:2px solid var(--border)}
+.breakdown-name{color:var(--text)}
+.breakdown-price{color:#fff;font-weight:600;white-space:nowrap}
+.breakdown-price .nok{color:var(--muted);font-weight:400;font-size:.8rem;margin-left:6px}
+
+/* Schedule */
+.schedule{margin-top:8px}
+.day-card{background:var(--card);border-radius:10px;padding:16px 20px;margin-bottom:8px;border-left:3px solid var(--accent)}
+.day-label{font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:4px}
+.day-title{font-weight:600;color:#fff;font-size:.95rem;margin-bottom:4px}
+.day-desc{font-size:.85rem;color:var(--muted);line-height:1.5}
+
+/* NOK input */
+.nok-rate{display:flex;align-items:center;gap:10px;margin:12px 0 0;font-size:.85rem;color:var(--muted)}
+.nok-input{background:var(--card);border:1px solid var(--border);border-radius:6px;color:#fff;padding:5px 10px;width:70px;font-size:.85rem;text-align:center}
+.nok-input:focus{outline:none;border-color:var(--accent)}
+
+@media(max-width:500px){
+  .summary-value{font-size:1.4rem}
+  .summary-cell{padding:14px 16px}
+  .breakdown-row{padding:10px 16px;font-size:.82rem}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Kawalerski Tromsø 2026</h1>
+  <p class="subtitle">Interaktywny kalkulator budżetu dla uczestników</p>
+
+  <div class="section-title">LICZBA OSOB</div>
+  <div class="group-toggle">
+    <div class="group-btn" data-count="15" onclick="setGroup(15)">
+      <div class="num">15 osob</div>
+      <div class="detail">lot 179 PLN/os</div>
+    </div>
+    <div class="group-btn active" data-count="19" onclick="setGroup(19)">
+      <div class="num">19 osob</div>
+      <div class="detail">lot 269 PLN/os</div>
+    </div>
+  </div>
+
+  <div class="nok-rate">
+    Kurs NOK/PLN:
+    <input type="number" class="nok-input" id="nokRate" value="0.38" step="0.01" min="0.01" oninput="recalc()">
+  </div>
+
+  <div class="section-title">WYBIERZ ATRAKCJE</div>
+  <div class="attractions" id="attractions"></div>
+
+  <div class="section-title">PODSUMOWANIE KOSZTOW</div>
+  <div class="summary-box">
+    <div class="summary-top">
+      <div class="summary-cell">
+        <div class="summary-label">Budżet całkowity</div>
+        <div class="summary-value" id="totalPLN">–</div>
+        <div class="summary-sub" id="totalNOK">–</div>
+      </div>
+      <div class="summary-cell">
+        <div class="summary-label">Koszt / osoba</div>
+        <div class="summary-value accent" id="perPLN">–</div>
+        <div class="summary-sub" id="perNOK">–</div>
+      </div>
+    </div>
+    <div class="breakdown" id="breakdown"></div>
+  </div>
+
+  <div class="section-title">RAMOWY PLAN</div>
+  <div class="schedule">
+    <div class="day-card">
+      <div class="day-label">Piątek 8.05</div>
+      <div class="day-title">Przylot do Tromsø</div>
+      <div class="day-desc">Zakwaterowanie w Robukta Lodge. Wieczorne zwiedzanie centrum, piwo w browarze Mack's.</div>
+    </div>
+    <div class="day-card">
+      <div class="day-label">Sobota 9.05</div>
+      <div class="day-title">Dzień atrakcji</div>
+      <div class="day-desc">Wybrany program dzienny (RIB boat, rejs fjordowy, safari). Wieczorem sauna + jacuzzi w willi, grill.</div>
+    </div>
+    <div class="day-card">
+      <div class="day-label">Niedziela 10.05</div>
+      <div class="day-title">Kolejka Fjellheisen + program</div>
+      <div class="day-desc">Panorama z 421 m n.p.m. Program popołudniowy (husky, kajaki). Kolacja grupowa – owoce morza.</div>
+    </div>
+    <div class="day-card">
+      <div class="day-label">Poniedziałek 11.05</div>
+      <div class="day-title">Powrót</div>
+      <div class="day-desc">Wymeldowanie do 11:00. Transfer na lotnisko, lot powrotny.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const ATTRACTIONS = [
+  {id:'rib',   name:'RIB boat \u2013 Midnight adventure',  nok:1100, tag:'adrenalina',   on:true},
+  {id:'fish',  name:'Rejs fjordowy + po\u0142\u00f3w ryb', nok:800,  tag:'must-have',    on:true},
+  {id:'eagle', name:'Safari \u2013 or\u0142y bieliki (Sommar\u00f8y)', nok:1490, tag:'unikalne', on:false},
+  {id:'cable', name:'Kolejka Fjellheisen (421 m)',          nok:350,  tag:'obowi\u0105zkowe', on:true},
+  {id:'crab',  name:'Nurkowanie/\u0142owienie krab\u00f3w kr\u00f3lewskich', nok:1750, tag:'adrenalina', on:false},
+  {id:'husky', name:'Husky hiking + trekking',              nok:1200, tag:'unikalne',     on:false},
+  {id:'dinner',name:'Kolacja grupowa \u2013 owoce morza',   nok:900,  tag:'lifestyle',    on:true},
+  {id:'pub',   name:'Wiecz\u00f3r w pubach Troms\u00f8 + Macks', nok:300, tag:'wiecz\u00f3r', on:true},
+  {id:'kayak', name:'Kajakarstwo \u2013 archipelag',        nok:850,  tag:'aktywno\u015b\u0107', on:false},
+];
+
+const FLIGHT = {15: 179, 19: 269};
+const LODGE_PLN = 10000;
+const FOOD_NOK_PER_DAY = 150;
+const FOOD_DAYS = 3;
+const TRANSPORT_NOK = 250;
+
+let group = 19;
+let selected = new Set(ATTRACTIONS.filter(a => a.on).map(a => a.id));
+
+function tagClass(tag) {
+  const map = {
+    'adrenalina':'tag-adrenalina','must-have':'tag-must-have','unikalne':'tag-unikalne',
+    'obowi\u0105zkowe':'tag-obowiazkowe','lifestyle':'tag-lifestyle',
+    'wiecz\u00f3r':'tag-wieczor','aktywno\u015b\u0107':'tag-aktywnosc'
+  };
+  return map[tag] || '';
+}
+
+function renderAttractions() {
+  const el = document.getElementById('attractions');
+  el.innerHTML = ATTRACTIONS.map(a => {
+    const checked = selected.has(a.id);
+    const plnPerPerson = Math.round(a.nok * parseFloat(document.getElementById('nokRate').value));
+    return `<div class="attr-card${checked?' checked':''}" onclick="toggleAttr('${a.id}')">
+      <div class="attr-top">
+        <div class="attr-check"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 4" stroke="#0f1923" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="attr-name">${a.name}</div>
+      </div>
+      <div class="attr-price">${a.nok} NOK/os &middot; ${plnPerPerson} PLN/os</div>
+      <div class="attr-tag ${tagClass(a.tag)}">${a.tag}</div>
+    </div>`;
+  }).join('');
+}
+
+function setGroup(n) {
+  group = n;
+  document.querySelectorAll('.group-btn').forEach(b => {
+    b.classList.toggle('active', parseInt(b.dataset.count) === n);
+  });
+  recalc();
+}
+
+function toggleAttr(id) {
+  if (selected.has(id)) selected.delete(id); else selected.add(id);
+  recalc();
+}
+
+function fmt(n) {
+  return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+}
+
+function recalc() {
+  const rate = parseFloat(document.getElementById('nokRate').value) || 0.38;
+  const flightPerPerson = FLIGHT[group] || 269;
+  const flightTotal = flightPerPerson * 2 * group; // round trip
+
+  const lodgeTotal = LODGE_PLN;
+
+  const foodNokTotal = FOOD_NOK_PER_DAY * FOOD_DAYS * group;
+  const foodPlnTotal = Math.round(foodNokTotal * rate);
+
+  const transportNokTotal = TRANSPORT_NOK * group;
+  const transportPlnTotal = Math.round(transportNokTotal * rate);
+
+  let attrsRows = [];
+  let attrsTotalPln = 0;
+  ATTRACTIONS.forEach(a => {
+    if (!selected.has(a.id)) return;
+    const nokTotal = a.nok * group;
+    const plnTotal = Math.round(nokTotal * rate);
+    attrsTotalPln += plnTotal;
+    attrsRows.push({name: a.name, pln: plnTotal, nok: nokTotal, perPerson: true, nokPP: a.nok});
+  });
+
+  const grandTotal = flightTotal + lodgeTotal + foodPlnTotal + transportPlnTotal + attrsTotalPln;
+  const perPerson = Math.round(grandTotal / group);
+  const grandNok = Math.round(grandTotal / rate);
+  const perPersonNok = Math.round(perPerson / rate);
+
+  document.getElementById('totalPLN').textContent = fmt(grandTotal) + ' PLN';
+  document.getElementById('totalNOK').textContent = '\u2248 ' + fmt(grandNok) + ' NOK';
+  document.getElementById('perPLN').textContent = fmt(perPerson) + ' PLN';
+  document.getElementById('perNOK').textContent = '\u2248 ' + fmt(perPersonNok) + ' NOK';
+
+  // Breakdown
+  let rows = [];
+  rows.push({name: `Loty (${group} os. \u00d7 ${flightPerPerson} PLN \u00d7 2)`, pln: flightTotal, nok: null});
+  rows.push({name: 'Nocleg \u2013 Robukta Lodge (3 noce)', pln: lodgeTotal, nok: null});
+
+  attrsRows.forEach(r => {
+    rows.push({name: r.name, pln: r.pln, nok: `(${r.nokPP} NOK/os)`});
+  });
+
+  rows.push({name: `Jedzenie domowe (\u015bniadania/lunche, 3 dni)`, pln: foodPlnTotal, nok: `(${FOOD_NOK_PER_DAY} NOK/os/dzie\u0144)`});
+  rows.push({name: 'Transport lokalny (lotnisko + busy)', pln: transportPlnTotal, nok: `(${TRANSPORT_NOK} NOK/os)`});
+  rows.push({name: 'Razem', pln: grandTotal, nok: fmt(perPerson) + ' PLN/os'});
+
+  const bEl = document.getElementById('breakdown');
+  bEl.innerHTML = rows.map(r =>
+    `<div class="breakdown-row">
+      <span class="breakdown-name">${r.name}</span>
+      <span class="breakdown-price">${fmt(r.pln)} PLN${r.nok ? '<span class="nok">' + r.nok + '</span>' : ''}</span>
+    </div>`
+  ).join('');
+
+  renderAttractions();
+}
+
+recalc();
+</script>
+</body>
+</html>

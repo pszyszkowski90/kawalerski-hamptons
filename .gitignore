@@ -1,0 +1,10 @@
+.playwright-mcp/
+logs/
+.claude/
+*.yml
+*.png
+*.jpeg
+.~lock.*
+claude.md
+gemini.md
+airbnb-poland-*
