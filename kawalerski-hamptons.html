@@ -61,6 +61,15 @@ h1{font-size:1.6rem;font-weight:800;margin-bottom:4px;color:#fff}
 .tag-must{background:rgba(255,215,0,.18);color:var(--tag-must)}
 
 .attr-card .note{color:#f59e0b;font-size:.72rem;margin-left:32px;margin-top:-4px;margin-bottom:6px}
+.attr-card .contact{color:#7dd3fc;font-size:.72rem;margin-left:32px;margin-top:2px;margin-bottom:6px;font-family:ui-monospace,Consolas,monospace}
+
+.status-badge{display:inline-block;font-size:.62rem;font-weight:700;letter-spacing:.05em;padding:2px 7px;border-radius:4px;text-transform:uppercase;margin-left:6px;vertical-align:middle}
+.status-confirmed{background:rgba(74,222,128,.2);color:#4ade80;border:1px solid rgba(74,222,128,.4)}
+.status-estimated{background:rgba(245,158,11,.18);color:#fbbf24;border:1px solid rgba(245,158,11,.4)}
+.status-price_missing{background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.4)}
+
+.legend{display:flex;flex-wrap:wrap;gap:10px;padding:10px 14px;background:var(--card);border-radius:8px;margin-bottom:12px;font-size:.78rem;color:var(--muted)}
+.legend-item{display:flex;align-items:center;gap:5px}
 
 /* Summary */
 .summary-box{background:var(--card);border-radius:12px;overflow:hidden;margin-top:10px;position:sticky;bottom:14px;box-shadow:0 8px 24px rgba(0,0,0,.35);border:1px solid var(--border)}
@@ -114,6 +123,11 @@ h1{font-size:1.6rem;font-weight:800;margin-bottom:4px;color:#fff}
   </div>
 
   <div class="section-title">Atrakcje</div>
+  <div class="legend">
+    <span class="legend-item"><span class="status-badge status-confirmed">potwierdzone</span> cena oficjalna</span>
+    <span class="legend-item"><span class="status-badge status-estimated">orientacyjne</span> firma OK, cena rynkowa</span>
+    <span class="legend-item"><span class="status-badge status-price_missing">brak cennika</span> zadzwoń/napisz</span>
+  </div>
   <div id="categories"></div>
 
   <div class="summary-box">
@@ -156,127 +170,195 @@ h1{font-size:1.6rem;font-weight:800;margin-bottom:4px;color:#fff}
 <script>
 // type: "per_person" | "fixed"
 // priceNote: optional hint that appears below price
+// status: "confirmed" = sprawdzone (firma istnieje, cena potwierdzona); "estimated" = firma OK, cena rynkowa szacunkowa; "price_missing" = brak cennika, trzeba dzwonić
 const ATTRACTIONS = [
   // ======= NOCLEG =======
   {cat:"Nocleg (koszt bazowy)",
    id:"nocleg", name:"Willa Hamptons – 2 noce (8-10.05)",
-   desc:'Cała willa na wyłączność: 500 m², sypialnie dla 19 osób, sauna, jacuzzi, basen, sala kinowa, bilard, kominek, miejsce na ognisko. W cenie: cały obiekt bez ograniczeń.',
-   price:8092, type:"fixed", tag:"must", on:true, priceNote:"cena stała za cały obiekt"},
+   desc:'Cała willa na wyłączność: 500 m², sypialnie dla 19 osób, sauna, jacuzzi, basen, sala kinowa, bilard, kominek, miejsce na ognisko.',
+   price:8092, type:"fixed", tag:"must", on:true, status:"confirmed", priceNote:"cena stała za cały obiekt"},
 
   // ======= PRZY WILLI (dojazd pod drzwi) =======
   {cat:"Przy Willi (dojazd pod drzwi)",
-   id:"survivor_group",  name:'<a href="https://survivorgroup.pl" target="_blank">Survivor Group – survival pod willą</a>',
-   desc:'Instruktorzy przyjeżdżają pod willę, prowadzą survival w okolicznym lesie: rozpalanie ognia, orientacja, sygnalizacja. Zakończenie ogniskiem z kociołkiem. Do wyboru: strzelanie z łuku, paintball, kajaki.',
-   price:280, type:"per_person", tag:"villa", on:true, priceNote:"orientacyjnie 250-350 zł/os"},
-
-  {cat:"Przy Willi (dojazd pod drzwi)",
-   id:"sas",  name:'<a href="https://survival-sas.pl" target="_blank">SAS – Survival Adventure Squad</a>',
-   desc:'Tor linowy, skok wahadłowy z 6m, strzelanie z łuku, ognisko z kiełbachą. Min. 10 osób. Konkurencja dla Survivor Group.',
-   price:450, type:"per_person", tag:"villa", on:false, priceNote:"450 zł/os – program pełny"},
+   id:"survivor_group", name:'<a href="https://survivorgroup.pl" target="_blank">Survivor Group – survival pod willą</a>',
+   desc:'Instruktorzy przyjeżdżają pod willę, prowadzą survival w okolicznym lesie: rozpalanie ognia, orientacja, sygnalizacja, ognisko z kociołkiem. Uwaga: 1 instruktor na 4 os, dla 19 os trzeba ~5 instruktorów.',
+   price:499, type:"per_person", tag:"villa", on:true, status:"estimated", priceNote:"szkolenie 2-dniowe 499 zł/os (było błędne 280 zł)", contact:"formularz na stronie"},
 
   {cat:"Przy Willi (dojazd pod drzwi)",
    id:"bania", name:'<a href="https://baniawynajem.pl" target="_blank">Mobilna ruska bania</a>',
-   desc:'Przyczepka z banią przyjeżdża pod willę, ekipa montuje i tłumaczy obsługę. Drewno opałowe i lód wliczone. Średnica 200 cm, 6-8 osób na raz – rotacja na imprezie.',
-   price:600, type:"fixed", tag:"villa", on:true, priceNote:"400-600 zł za weekend"},
+   desc:'Przyczepka z banią na 6-8 osób, piec, termometr, hydromasaż. Drewno w cenie. Dla 19 os rotacja. Huta Podgórna ~65-70 km od Warszawy = +800 zł za dojazd tam i z powrotem.',
+   price:1600, type:"fixed", tag:"villa", on:true, status:"confirmed", priceNote:"weekend 800 zł + ~800 zł dojazd (3 zł/km poza 10 km od Wilanowa)", contact:"+48 609 800 040"},
 
   {cat:"Przy Willi (dojazd pod drzwi)",
-   id:"dj", name:"DJ + nagłośnienie pod willę",
-   desc:'DJ z własnym sprzętem, reflektory, efekty. Gra od 20:00 do 02:00+. Willa ma 500 m², taras z jacuzzi, salon – idealnie do grania.',
-   price:2000, type:"fixed", tag:"villa", on:true, priceNote:"1500-3000 zł za wieczór"},
+   id:"dj", name:'<a href="https://www.planujemywesele.pl/dje/serock" target="_blank">DJ pod willę (Serock/Legionowo)</a>',
+   desc:'330+ ofert DJ w okolicy Serocka. Gra od 20:00 do 02:00+, własny sprzęt, reflektory. Willa ma 500 m² – idealnie.',
+   price:1800, type:"fixed", tag:"villa", on:true, status:"estimated", priceNote:"1200-2500 zł za kawalerski"},
 
   {cat:"Przy Willi (dojazd pod drzwi)",
    id:"barman", name:'<a href="https://barside.pl" target="_blank">Warsztaty barmańskie (BarSide)</a>',
-   desc:'Barman przyjeżdża z mobilnym barem. 2h warsztatów: koktajle, shotki, flair. Każdy miksuje sam, degustacja. Można rozwinąć w wieczorny bar.',
-   price:250, type:"per_person", tag:"villa", on:false, priceNote:"200-300 zł/os za 2h"},
+   desc:'Barman przyjeżdża z mobilnym barem. 2h warsztatów: koktajle, shotki, flair. Obsługują całą Polskę, dojazd OK. Cena do negocjacji (brak oficjalnego cennika).',
+   price:250, type:"per_person", tag:"villa", on:false, status:"price_missing", priceNote:"brak cennika – zapytaj mailem", contact:"+48 503 893 274, biuro@barside.pl"},
 
   {cat:"Przy Willi (dojazd pod drzwi)",
-   id:"bbq", name:'<a href="https://zlotylin.pl" target="_blank">BBQ master / catering (Złoty Okoń)</a>',
-   desc:'Pieczone prosięcie, żeberka, kociołek nad ogniskiem. Kucharz przyjeżdża, robi show, obsługa. Alternatywa: zamówienie cateringu zimny/grill.',
-   price:120, type:"per_person", tag:"villa", on:true, priceNote:"100-150 zł/os"},
+   id:"bbq", name:'<a href="https://zlotyokon.pl/catering/" target="_blank">Catering Złoty Okoń (Serock)</a>',
+   desc:'Restauracja z Serocka, catering pod wskazany adres. Pieczone prosięcie, żeberka, kociołek – 10-120 osób. Dojazd do Huty Podgórnej (10 km od Serocka).',
+   price:120, type:"per_person", tag:"villa", on:true, status:"price_missing", priceNote:"indywidualna wycena (100-150 zł/os)", contact:"+48 605 997 422, Warszawska 49, Serock"},
+
+  {cat:"Przy Willi (dojazd pod drzwi)",
+   id:"masaz", name:'<a href="https://www.mobilemed.pl/masaz-z-dojazdem-serock/" target="_blank">Masaż mobilny (Mobilemed Serock)</a>',
+   desc:'Masażystki przyjeżdżają do willi. Masaże relaksacyjne/sportowe. Dla 19 os polecane 2-3 osoby jednocześnie (rotacja).',
+   price:180, type:"per_person", tag:"villa", on:false, status:"estimated", priceNote:"120-250 zł/h/os – rynkowo"},
+
+  {cat:"Przy Willi (dojazd pod drzwi)",
+   id:"whisky", name:'<a href="https://feelevent.pl/oferta/degustacja-whisky-warszawa/" target="_blank">Degustacja whisky (Feel Event)</a>',
+   desc:'Ekspert przyjeżdża z 5 rodzajami whisky single malt. 2h, każdy degustuje, historia, nuty smakowe. Opcja premium: 7 whisky + charcuterie.',
+   price:250, type:"per_person", tag:"villa", on:false, status:"estimated", priceNote:"150-300 zł/os (premium do 500 zł)"},
+
+  {cat:"Przy Willi (dojazd pod drzwi)",
+   id:"sushi", name:'<a href="https://mobilny-sushimaster.pl/prywatny-kucharz/" target="_blank">Sushi master pod willę</a>',
+   desc:'Prywatny kucharz sushi przyjeżdża, robi pokaz na żywo: krojenie, zawijanie, historie o Japonii. Obsługa Warszawa + Mazowsze.',
+   price:220, type:"per_person", tag:"villa", on:false, status:"estimated", priceNote:"150-300 zł/os (sushi + pokaz)"},
+
+  {cat:"Przy Willi (dojazd pod drzwi)",
+   id:"fireshow", name:'<a href="https://teatrognia.pl/" target="_blank">Fire show / teatr ognia</a>',
+   desc:'Taniec z ogniem, pokaz pirotechniczny pod willą. Czas 15-30 min, obsługują Mazowsze. Idealne pod wieczór przed ogniskiem.',
+   price:2000, type:"fixed", tag:"villa", on:false, status:"estimated", priceNote:"1000-3000 zł za pokaz"},
+
+  {cat:"Przy Willi (dojazd pod drzwi)",
+   id:"dancer", name:'<a href="https://showladies.oferteo.pl/" target="_blank">Tancerka erotyczna pod willę</a>',
+   desc:'Dojazd do Serocka/Zegrza/Mazowsza. Pokaz 15-30 min. Klasyka kawalerskiego (dyskretnie pod willę).',
+   price:900, type:"fixed", tag:"villa", on:false, status:"estimated", priceNote:"500-1500 zł za pokaz"},
+
+  {cat:"Przy Willi (dojazd pod drzwi)",
+   id:"fotograf", name:'<a href="https://www.zdjeciaeventowe.pl/cennik-fotograf-na-event/" target="_blank">Fotograf eventowy pod willę</a>',
+   desc:'Fotoreportaż z kawalerskiego, przekazanie w 4 dni roboczych. Min. 2h = 600 zł netto, pełny dzień (6h) = 1950 zł brutto + ~150 zdjęć.',
+   price:1950, type:"fixed", tag:"villa", on:false, status:"confirmed", priceNote:"6h = 1950 zł brutto + dojazd poza Warszawę"},
 
   // ======= ZALEW ZEGRZYŃSKI / WODNE =======
   {cat:"Zalew Zegrzyński – wodne",
    id:"albatros", name:'<a href="https://www.zeglugamazowiecka.pl" target="_blank">Statek Albatros – rejs 2h</a>',
-   desc:'Wynajem całego statku z załogą, start z przystani Nieporęt (15 min od willi). Maks. 25 os. z cateringiem (idealnie dla 19). Cena stała za rejs, nie za osobę.',
-   price:4000, type:"fixed", tag:"must", on:true, priceNote:"4000 zł / 2h z Nieporętu"},
+   desc:'Wynajem całego statku z załogą. Start z przystani Nieporęt (30-40 min z willi). Max 25 os z cateringiem (19 mieści się idealnie).',
+   price:4000, type:"fixed", tag:"must", on:true, status:"confirmed", priceNote:"4000 zł brutto/2h z Nieporętu, +1000 zł każda dodatkowa"},
 
   {cat:"Zalew Zegrzyński – wodne",
-   id:"flyboard", name:'<a href="https://flyboard.pl" target="_blank">Flyboard Polska (Zegrze Płd.)</a>',
-   desc:'Deska odrzutowa podłączona do skutera wodnego – lot 8-10m nad wodą. Plaża Hotelu 500, ul. Warszawska 31A. Sezon od maja. Kontakt: +48 796 456 333.',
-   price:200, type:"per_person", tag:"adrenaline", on:false, priceNote:"15 min/os – nie każdy chce"},
+   id:"flyboard", name:'<a href="https://www.hotel500.com.pl/zegrze/en/attractions/attractions/flyboard" target="_blank">Flyboard (Plaża Hotelu 500)</a>',
+   desc:'Deska odrzutowa, lot 8-10m nad wodą. Dodatkowo hoverboard, jetpack. Plaża Hotelu 500, ul. Warszawska 31A (25-30 min z willi). Sezon od maja.',
+   price:200, type:"per_person", tag:"adrenaline", on:false, status:"estimated", priceNote:"~200 zł/15 min – cennik 2026 nieopublikowany"},
 
   {cat:"Zalew Zegrzyński – wodne",
-   id:"water_club", name:"Water-Club (Nieporęt) – 3 łodzie bez patentu",
-   desc:'Wypożyczenie 3 małych łodzi (5-6 os. każda), silniki 10 KM bez patentu. Własna muzyka, lodówka, jazda po Zalewie. ~400 zł za 4h / łódź.',
-   price:1200, type:"fixed", tag:"water", on:false, priceNote:"3 łodzie × 400 zł / 4h"},
+   id:"water_club", name:'<a href="https://www.water-club.pl/lodzie/k1,lodzie-bez-uprawnien" target="_blank">Water-Club – łodzie bez patentu</a>',
+   desc:'3 łodzie motorowe bez patentu (6 os/łódź). Własna muzyka, lodówka, jazda po Zalewie. Rynkowo 190 zł/h/łódź.',
+   price:1140, type:"fixed", tag:"water", on:false, status:"estimated", priceNote:"3 łodzie × 190 zł/h × ~2h"},
 
   {cat:"Zalew Zegrzyński – wodne",
-   id:"wake", name:'<a href="https://wakeschool.pl" target="_blank">Wakeschool Zegrze (wakeboard)</a>',
-   desc:'Motorówka Axis A22 (350 KM), kapitan-instruktor, 11 os. na raz. Wakeboard, wakesurf, banan, kółka. Sprzęt + pianki w cenie.',
-   price:350, type:"per_person", tag:"water", on:false, priceNote:"wycena indywidualna"},
+   id:"wake", name:'<a href="https://wakeschool.pl" target="_blank">Wakeschool Zegrze</a>',
+   desc:'Motorówka Axis A22 (350 KM), kapitan-instruktor, 11 os na raz. Wakeboard, wakesurf, banan, kółka. Sprzęt + pianki w cenie.',
+   price:350, type:"per_person", tag:"water", on:false, status:"price_missing", priceNote:"wycena indywidualna", contact:"+48 602 884 170"},
 
   {cat:"Zalew Zegrzyński – wodne",
-   id:"kayak", name:'<a href="https://kajakiserock.pl" target="_blank">Kajaki Serock – spływ Narwią</a>',
-   desc:'Spływ 2-3h z nurtem do Serocka, przerwa na dzikiej plaży z grillem. Organizator wiezie na start. Najtańsza opcja wodna.',
-   price:40, type:"per_person", tag:"chill", on:false, priceNote:"60-80 zł / kajak 2-osobowy"},
+   id:"kayak", name:'<a href="http://kajakiserock.pl/cennik/" target="_blank">Kajaki Serock – spływ</a>',
+   desc:'Wypożyczalnia w Serocku (8 km). Dla 19 os: 10 kajaków 2-osobowych. Spływ Narwią, przerwa na grilla.',
+   price:45, type:"per_person", tag:"chill", on:false, status:"confirmed", priceNote:"30 zł/h lub 90 zł/dzień za kajak 2-os"},
 
   // ======= ADRENALINA / BROŃ / MOTOR =======
   {cat:"Adrenalina / broń / motor",
    id:"ksm9", name:'<a href="https://ksm9.pl" target="_blank">Strzelnica Marynino (KSM9)</a>',
-   desc:'Kryta strzelnica 5 min od Serocka. Pakiet startowy: AK-47, AR-15, Glock, strzelba. Instruktor, bez patentów. Najbliższa strzelnica od willi.',
-   price:170, type:"per_person", tag:"adrenaline", on:true, priceNote:"140-240 zł/os zależnie od pakietu"},
+   desc:'Kryta strzelnica 5 km od Serocka (15 min z willi). Pakiet: AK-47, AR-15, Glock, strzelba. Instruktor, bez patentów. Wymaga rezerwacji.',
+   price:170, type:"per_person", tag:"adrenaline", on:true, status:"estimated", priceNote:"140-240 zł/os zależnie od pakietu", contact:"+48 531 860 819"},
 
   {cat:"Adrenalina / broń / motor",
-   id:"quadfun", name:'<a href="https://quadfun.pl" target="_blank">QuadFun – tor quadowy</a>',
-   desc:'Największy tor quadowy w Polsce, 6 ha, 25 km od Warszawy (ok. 1h od willi). Specjalizują się w kawalerskich, busy z Warszawy w cenie pakietu.',
-   price:280, type:"per_person", tag:"adrenaline", on:false, priceNote:"zależnie od pakietu"},
+   id:"quadfun", name:'<a href="https://quadfun.pl" target="_blank">QuadFun – tor quadowy (Góra Kalwaria)</a>',
+   desc:'Największy tor off-road w Polsce, 6 ha, 5 tras. Specjalizują się w kawalerskich. ALE: Góra Kalwaria to 60-70 km z willi (1h+ drogi).',
+   price:280, type:"per_person", tag:"adrenaline", on:false, status:"price_missing", priceNote:"cennik nieopublikowany, pakiety kawalerskie", contact:"+48 795 144 333"},
 
   {cat:"Adrenalina / broń / motor",
-   id:"offroad", name:"Off-road 4x4 (CSE Autek, Józefów)",
-   desc:'Nissan Terrano / Jeep Cherokee po torze błotnym, z instruktorem lub samodzielnie po zapoznaniu. Na 3-4 osoby w aucie. ~1500-1800 zł/samochód.',
-   price:3000, type:"fixed", tag:"adrenaline", on:false, priceNote:"2 auta × ~1500 zł"},
+   id:"offroad", name:'<a href="https://www.drive-position.pl/" target="_blank">Off-road 4x4 (Drive Position)</a>',
+   desc:'Drive Position Moto Park w Sękocinie Starym. 3 tory szkoleniowe, off-road, quady, ATV. Alternatywa dla QuadFun.',
+   price:3000, type:"fixed", tag:"adrenaline", on:false, status:"estimated", priceNote:"~1500-1800 zł/samochód × 2"},
 
   {cat:"Adrenalina / broń / motor",
-   id:"paintball_zegrze", name:'<a href="https://nadzegrzem.pl/specnaz-paintball-zegrze/" target="_blank">Paintball Zegrze (NadZegrzem.pl)</a>',
-   desc:'Pole nad Zalewem Zegrzyńskim, scenariusze militarne: odbijanie zakładnika (Pan Młody!), obrona bazy, granaty dymne. Ok. 500 kulek/os.',
-   price:140, type:"per_person", tag:"adrenaline", on:false, priceNote:"120-160 zł/os"},
+   id:"paintball_zegrze", name:'<a href="https://nadzegrzem.pl/specnaz-paintball-zegrze/" target="_blank">Paintball SPECNAZ (NadZegrzem)</a>',
+   desc:'Pole nad Zegrzem. 80 markerów Tippmann M16, scenariusze militarne: odbijanie zakładnika (Pan Młody!), obrona bazy, granaty dymne.',
+   price:140, type:"per_person", tag:"adrenaline", on:false, status:"price_missing", priceNote:"cennik indywidualny, ~120-160 zł/os"},
 
   {cat:"Adrenalina / broń / motor",
-   id:"balloon", name:"Lot balonem na uwięzi (Zegrze)",
-   desc:'Balon na linach – 50-60m nad ziemią, kosz po 3-4 osoby. Każdy "wznosi się" 10-15 min. Ekipa przyjeżdża pod ustalone miejsce. Atrakcja premium.',
-   price:2000, type:"fixed", tag:"adrenaline", on:false, priceNote:"1500-2500 zł za 2-3h"},
+   id:"motocross", name:'<a href="https://mxtribe.pl/" target="_blank">Motocross / Enduro (MX Tribe)</a>',
+   desc:'MX Tribe Ojrzanów (40 min z Warszawy, ~1h z willi). 3 tory, pełny sprzęt, instruktor. Dla każdego od amatora.',
+   price:200, type:"per_person", tag:"adrenaline", on:false, status:"confirmed", priceNote:"1.5h/150 zł, 3h/200 zł, dzień/300 zł"},
+
+  {cat:"Adrenalina / broń / motor",
+   id:"supercar", name:'<a href="https://cylindersi.pl" target="_blank">Wynajem supersamochodu (Cylindersi)</a>',
+   desc:'Lamborghini Huracán EVO, Porsche 911, BMW M4, Ferrari – wynajem od kilku godzin. Odbiór w Warszawie.',
+   price:1700, type:"fixed", tag:"adrenaline", on:false, status:"confirmed", priceNote:"Lambo ~1600 zł/dzień, Porsche 1500-1900 zł/dzień"},
+
+  {cat:"Adrenalina / broń / motor",
+   id:"balloon", name:'<a href="https://lotybalonem.pl" target="_blank">Lot balonem (Sky Adventure)</a>',
+   desc:'Lot widokowy z Serocka/Nieporętu. UWAGA: lot na uwięzi przy Zegrzu nie znaleziony – to zwykły lot balonem. Dla 2-4 os.',
+   price:900, type:"per_person", tag:"adrenaline", on:false, status:"confirmed", priceNote:"standard 899 zł/os, ekskluzywny do 2499 zł/os"},
 
   // ======= WARSZAWA (wyjazd) =======
   {cat:"Warszawa (dojazd ~40 min)",
    id:"axe", name:'<a href="https://www.unitedaxethrowers.com" target="_blank">United Axe Throwers (Mokotów)</a>',
-   desc:'7 torów do rzucania siekierami, własny bar, miejsce dla 60 osób. Turniej grupowy, 1,5h sesja. Jeden z najstarszych klubów w PL.',
-   price:70, type:"per_person", tag:"warsaw", on:false, priceNote:"60-80 zł/os za sesję"},
+   desc:'7 torów do rzucania siekierami, własny bar, miejsce dla 60 osób. Turniej grupowy, 1.5h sesja.',
+   price:80, type:"per_person", tag:"warsaw", on:false, status:"estimated", priceNote:"60-100 zł/os rynkowo"},
 
   {cat:"Warszawa (dojazd ~40 min)",
-   id:"bubble", name:'<a href="https://gmoodsball.pl/wieczor-kawalerski-warszawa-bubble-football/" target="_blank">Bubble football (Funny Football Center)</a>',
-   desc:'Piłka nożna w dmuchanych kulach, 10 kul + sędzia. Ok. 70 min gry. Pan Młody w oranżowym kombinezonie – symbol dobrego zwyczaju.',
-   price:90, type:"per_person", tag:"warsaw", on:false, priceNote:"ok. 90 zł/os"},
+   id:"bubble", name:'<a href="https://gmoodsball.pl" target="_blank">Bubble football (GMoodsBall)</a>',
+   desc:'Piłka w dmuchanych kulach, 10 kul + sędzia, ~70 min gry. Mają pakiety 15-20+ osób – 19 mieści się.',
+   price:90, type:"per_person", tag:"warsaw", on:false, status:"price_missing", priceNote:"cennik po kontakcie", contact:"+48 575 556 355"},
 
-  // ======= ZWIEDZANIE / CHILLOUT =======
+  {cat:"Warszawa (dojazd ~40 min)",
+   id:"gokart", name:'<a href="https://rcw.pl/gokarty-legionowo" target="_blank">Gokarty RCW (Legionowo)</a>',
+   desc:'Tor 800m kryty klimatyzowany, Stara Wieś – 30-40 min z willi. Najbliższy tor od willi. Turnieje grupowe.',
+   price:80, type:"per_person", tag:"warsaw", on:false, status:"estimated", priceNote:"50-100 zł/sesja"},
+
+  {cat:"Warszawa (dojazd ~40 min)",
+   id:"escape", name:'<a href="https://domzagadek.pl/" target="_blank">Escape Room (Dom Zagadek)</a>',
+   desc:'Grupa 19 os = 4-5 równoległych pokoi (3-6 os/pokój). Kilka scenariuszy, zagadki logiczne.',
+   price:70, type:"per_person", tag:"warsaw", on:false, status:"confirmed", priceNote:"150-300 zł/pokój × 4-5 pokoi ≈ ~70 zł/os"},
+
+  {cat:"Warszawa (dojazd ~40 min)",
+   id:"laser", name:'<a href="https://cyberarenalaser.pl/cennik/" target="_blank">Laser Tag (Cyber Arena)</a>',
+   desc:'Max 20 uczestników – idealne dla 19 os. 3 gry po 20 min. Alternatywa: Killhouse (max 20 os), Labsektor.',
+   price:105, type:"per_person", tag:"warsaw", on:false, status:"confirmed", priceNote:"3 gry: 40+35+30 = 105 zł/os"},
+
+  {cat:"Warszawa (dojazd ~40 min)",
+   id:"vr", name:'<a href="https://ateitis.pl" target="_blank">VR Arena (ATEITIS / NeoVR)</a>',
+   desc:'Salony VR z multiplayerem, zamknięte eventy, 400 m². Pakiety kawalerskie. Sesja 30-60 min.',
+   price:75, type:"per_person", tag:"warsaw", on:false, status:"estimated", priceNote:"50-100 zł/os"},
+
+  // ======= TRANSPORT =======
+  {cat:"Transport",
+   id:"bus", name:'<a href="https://wynajembusowwarszawa.pl/" target="_blank">Wynajem busa 20-os (Globe Bus)</a>',
+   desc:'Odbiór ekipy z Warszawy i dowóz do willi + powrót. 1 bus 20-os lub 2 busy 9-os. Alternatywa: dwupoziomowy londyńczyk od BusBus (efekt wow).',
+   price:1000, type:"fixed", tag:"chill", on:false, status:"estimated", priceNote:"500-1500 zł za kurs Warszawa ↔ Huta Podgórna", contact:"+48 519 543 013"},
+
+  // ======= ZWIEDZANIE =======
   {cat:"Zwiedzanie / chillout",
-   id:"twierdza_zegrze", name:"Twierdza Zegrze / Fort Beniaminów",
-   desc:'Rosyjskie forty z przełomu XIX/XX w., Prochownia Wschodnia – klimatyczne ruiny, klimat urbex. Wstęp wolny, można z przewodnikiem.',
-   price:0, type:"fixed", tag:"chill", on:false, priceNote:"bezpłatnie (bez przewodnika)"},
+   id:"twierdza_zegrze", name:'<a href="https://www.forty.waw.pl/index.php/twierdza-zegrze/forty-twierdzy-zegrze/300-fort-beniaminow" target="_blank">Twierdza Zegrze / Fort Beniaminów</a>',
+   desc:'Ruiny rosyjskiego fortu z 1904 r. Teren nieogrodzony, tunele, bunkry. 6 km od Zegrza. Brak stałych przewodników – samodzielnie.',
+   price:0, type:"fixed", tag:"chill", on:false, status:"confirmed", priceNote:"wstęp wolny, teren nieogrodzony"},
 
   {cat:"Zwiedzanie / chillout",
    id:"pultusk", name:"Pułtusk – najdłuższy rynek w Europie",
-   desc:'~17 km od willi. Rynek, zamek, lody u Romana, gondole. Dobry przystanek na niedzielę przed powrotem.',
-   price:0, type:"fixed", tag:"chill", on:false, priceNote:"koszty własne"},
+   desc:'28 km z willi. Rynek 380 m, Zamek Biskupi nad Narwią, Bazylika, gondole po fosie.',
+   price:0, type:"fixed", tag:"chill", on:false, status:"confirmed", priceNote:"koszty własne (lody, gondole)"},
 
   {cat:"Zwiedzanie / chillout",
-   id:"modlin", name:"Twierdza Modlin",
-   desc:'Potężne XIX-wieczne fortyfikacje przy ujściu Narwi, ~40 km. Koszary Napoleona, wieża czerwona. Zwiedzanie 2-3h.',
-   price:20, type:"per_person", tag:"chill", on:false, priceNote:"~20 zł/os bilet"},
+   id:"modlin", name:'<a href="https://twierdzamodlin.com/" target="_blank">Twierdza Modlin</a>',
+   desc:'XIX-wieczne fortyfikacje przy ujściu Narwi, ~40 km. Muzeum Kampanii Wrześniowej, Wieża Widokowa, Prochownia, wystawa COBI.',
+   price:50, type:"per_person", tag:"chill", on:false, status:"confirmed", priceNote:"komplet: muzeum 13 + wieża 17-19 + COBI 20 ≈ 50 zł/os"},
 
   {cat:"Zwiedzanie / chillout",
-   id:"jablonna", name:"Pałac w Jabłonnie",
-   desc:'XVIII-wieczny pałac z parkiem, 20 km od willi. Spokojne zwiedzanie, restauracja na miejscu.',
-   price:15, type:"per_person", tag:"chill", on:false, priceNote:"~15 zł/os"},
+   id:"jablonna", name:'<a href="https://www.palacjablonna.pl/" target="_blank">Pałac Jabłonna</a>',
+   desc:'XVIII-wieczny pałac PAN z parkiem, 20 km od willi. Spokojne zwiedzanie, restauracja. Uwaga: wymaga sprawdzenia dostępności.',
+   price:15, type:"per_person", tag:"chill", on:false, status:"price_missing", priceNote:"cena orientacyjna – info@palacjablonna.pan.pl"},
+
+  // ======= PAKIETY ALL-INCLUSIVE =======
+  {cat:"Pakiety all-inclusive (alternatywa)",
+   id:"formoza", name:'<a href="https://campformoza.pl/wieczory-kawalerskie-2026/" target="_blank">Camp Formoza – pakiet EPIC z noclegiem</a>',
+   desc:'UWAGA: to alternatywa zamiast willi! Paintball + survival + łucznictwo + kajaki + sumo + mobilna strzelnica + kasyno. Z noclegiem w party house.',
+   price:450, type:"per_person", tag:"must", on:false, status:"confirmed", priceNote:"EPIC 450 zł/os, Quick 170, VIP 620", contact:"+48 792 233 332"},
 ];
 
 let breakdownOpen = false;
@@ -301,13 +383,16 @@ function render() {
     items.forEach(a => {
       const checked = a.on;
       const unit = a.type === 'per_person' ? 'zł/os' : 'zł';
+      const statusLabel = a.status === 'confirmed' ? 'potwierdzone' : a.status === 'estimated' ? 'orientacyjne' : 'brak cennika';
+      const statusBadge = a.status ? `<span class="status-badge status-${a.status}" title="${statusLabel}">${statusLabel}</span>` : '';
       html += `<div class="attr-card${checked?' checked':''}" onclick="toggleAttr('${a.id}', event)">
         <div class="attr-head">
           <div class="attr-check"><svg viewBox="0 0 13 13" fill="none"><path d="M2 6.5l3 3L11 3.5" stroke="#0f1923" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-          <div class="attr-name">${a.name}</div>
+          <div class="attr-name">${a.name}${statusBadge}</div>
         </div>
         <div class="attr-desc">${a.desc}</div>
         ${a.priceNote ? `<div class="note">${a.priceNote}</div>` : ''}
+        ${a.contact ? `<div class="contact">☎ ${a.contact}</div>` : ''}
         <div class="attr-bottom">
           <div class="attr-price" onclick="event.stopPropagation()">
             <input type="number" class="attr-price-input" value="${a.price}" min="0" step="10" onchange="updatePrice('${a.id}', this.value)">
