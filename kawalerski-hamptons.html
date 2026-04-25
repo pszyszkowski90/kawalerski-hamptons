@@ -329,9 +329,131 @@ const ATTRACTIONS = [
 
   // ======= TRANSPORT =======
   {cat:"Transport",
-   id:"bus", name:'<a href="https://wynajembusowwarszawa.pl/" target="_blank">Wynajem busa 20-os (Globe Bus)</a>',
-   desc:'Odbiór ekipy z Warszawy i dowóz do willi + powrót. 1 bus 20-os lub 2 busy 9-os. Alternatywa: dwupoziomowy londyńczyk od BusBus (efekt wow).',
-   price:1000, type:"fixed", tag:"chill", on:false, status:"estimated", priceNote:"500-1500 zł za kurs Warszawa ↔ Huta Podgórna", contact:"+48 519 543 013"},
+   id:"bus_transfer", name:'<a href="https://busbus.pl/cennik" target="_blank">Bus 20-os transfer Warszawa↔Huta (BusBus)</a>',
+   desc:'Pojedynczy kurs: odbiór ekipy z Warszawy, dowóz do willi (lub odwrotnie). Bus 20-os, 1 kierowca. ~70 km × 5.5 zł/km netto + base ~700 zł = ~1100 zł brutto.',
+   price:1100, type:"fixed", tag:"chill", on:false, status:"confirmed", priceNote:"BusBus: bus 20-os od 1150 zł netto/dzień (do 200 km) lub 5.5 zł/km netto"},
+
+  {cat:"Transport",
+   id:"bus_saturday", name:'<a href="https://busbus.pl/cennik" target="_blank">Bus 20-os sobota CAŁY DZIEŃ z kierowcą</a>',
+   desc:'Sobota: willa → Warszawa (klub/Wilanów) → przejazdy w mieście → powrót nad ranem do willi. ~250-300 km łącznie. 1 bus 20-os z kierowcą. Idealne pod Circoloco/Progresję.',
+   price:2700, type:"fixed", tag:"warsaw", on:false, status:"estimated", priceNote:"~2200-3000 zł brutto (1150 zł netto/dzień + ~150 km × 5.5 zł + weekend +20%)"},
+
+  {cat:"Transport",
+   id:"bus_2x9", name:'<a href="https://e-camel.pl/cennik/" target="_blank">2× bus 9-os sobota cały dzień (E-Camel)</a>',
+   desc:'Alternatywa: 2 mniejsze busy 8-os + kierowca. Większa elastyczność (jedna grupa może wracać wcześniej). E-Camel: 800 zł netto/dzień + 100 km, każdy km +3 zł.',
+   price:2700, type:"fixed", tag:"warsaw", on:false, status:"confirmed", priceNote:"2 × ~1250 zł netto = ~2700 zł brutto za sobotę", contact:"+48 532 888 880"},
+
+  // ======= IMPREZY W WARSZAWIE (PIĄTEK + SOBOTA) =======
+  {cat:"Imprezy w Warszawie (8-9 maja)",
+   id:"smolna_leafar", name:'<a href="https://stage24.pl" target="_blank">Pt 8.05 – Smolna: Leafar Legov LIVE + Konstantin</a>',
+   desc:'Smolna 38, od 22:00. Leafar Legov (kolektyw Giegling, Berlin/Weimar) – deep/minimal/dub, jakościowo. Bilet wpuszcza też na nocną afterparty Konstantina po północy. "Main floor dla koneserów".',
+   price:90, type:"per_person", tag:"warsaw", on:false, status:"estimated", priceNote:"~80-100 zł door (presale taniej)"},
+
+  {cat:"Imprezy w Warszawie (8-9 maja)",
+   id:"jasna_neophyte", name:'<a href="https://ra.co" target="_blank">Pt 8.05 – Jasna 1: Neophyte + Edoardo Figara</a>',
+   desc:'Jasna 1, od 23:00. Hardcore/gabber – najtwardsza odnoga techno, ostre BPM-y, klimat berlin-but-faster. Niszowe, dla wytrwałych. Odpada jeśli ekipa to nie hardcoreowi raverzy.',
+   price:75, type:"per_person", tag:"warsaw", on:false, status:"confirmed", priceNote:"od 75 zł"},
+
+  {cat:"Imprezy w Warszawie (8-9 maja)",
+   id:"circoloco", name:'<a href="https://stage24.pl" target="_blank">★ Sob 9.05 – Circoloco @ Pałac w Wilanowie</a>',
+   desc:'TOP weekendu. Pierwsza edycja Circoloco w PL (kultowa marka z DC-10/Ibiza). Lineup: Honey Dijon, Bedouin, Carlita, Job Jobse, PAWSA, Prospa, JAMBACK. Plenerowo, dziedziniec Pałacu w Wilanowie. Od 16:00. KUP TERAZ – wyprzeda się.',
+   price:300, type:"per_person", tag:"must", on:false, status:"estimated", priceNote:"~250-400 zł presale (typowo dla takiego lineup)"},
+
+  {cat:"Imprezy w Warszawie (8-9 maja)",
+   id:"euforia_progresja", name:'<a href="https://www.biletyna.pl" target="_blank">Sob 9.05 – Euforia Dźwięku @ Progresja</a>',
+   desc:'Progresja, ul. Fort Wola, od 20:00. Pan-Pot (legenda berlin techno, Mobilee) + Anfisa Letyago (włoska gwiazda) + Dobra Faza + Siasia. Klasyczny rave techno do rana. KONFLIKT z Circoloco – trzeba wybrać.',
+   price:200, type:"per_person", tag:"warsaw", on:false, status:"estimated", priceNote:"~150-250 zł presale"},
+
+  // ======= NA MIEJSCU / 0 zł (ZABAWY W WILLI) =======
+  {cat:"Na miejscu / 0 zł (zabawy w willi)",
+   id:"roast_pm", name:"🎤 Roast Pana Młodego przy kominku",
+   desc:'Każdy ma 2 min na NAJGORSZĄ historię o PM. Świadek prowadzi, piwo w dłoni. Klasyk amerykański – dla 30-latków historie z liceum/studiów/pierwszych prac są już śmieszne, nie wstydliwe.',
+   price:0, type:"fixed", tag:"villa", on:false, status:"confirmed", priceNote:"przygotowanie: każdy 1 historia"},
+
+  {cat:"Na miejscu / 0 zł (zabawy w willi)",
+   id:"quiz_pm", name:"❓ Quiz \"Czy znamy Pana Młodego\"",
+   desc:'Świadek przygotowuje 30 pytań (info od narzeczonej). Drużyny po 4-5 osób. Pytania typu: ulubione hasło, imię pierwszej miłości, najgorsza praca, ile razy zwymiotował na studiach. Zwycięzcy nie piją shotów wstępnych.',
+   price:0, type:"fixed", tag:"villa", on:false, status:"confirmed", priceNote:"przygotowanie: świadek + narzeczona"},
+
+  {cat:"Na miejscu / 0 zł (zabawy w willi)",
+   id:"most_likely", name:"👉 Most Likely To",
+   desc:'Każdy dostaje karty "kto z nas najprawdopodobniej...". Wszyscy odpowiadają jednocześnie wskazaniem palcem. Pijesz, jeśli ktoś wskazał Ciebie. Pytania typu: kto wyląduje w sądzie, kto ma 3 abonamenty na siłownię.',
+   price:0, type:"fixed", tag:"villa", on:false, status:"confirmed", priceNote:"karty z Allegro 30 zł lub print z internetu"},
+
+  {cat:"Na miejscu / 0 zł (zabawy w willi)",
+   id:"casino", name:"🎰 Casino Night (krupierzy z grupy)",
+   desc:'Wpisowe 50-100 zł od osoby na wspólny prezent dla PM. Krupierami 2-3 osoby z grupy (rotacja). Plansza ruletki + karty + żetony z Allegro za ~50 zł. Blackjack, poker, ruletka. Klimat Vegas.',
+   price:0, type:"fixed", tag:"villa", on:false, status:"confirmed", priceNote:"sprzęt z Allegro: ~80 zł / wpisowe 50-100 zł na prezent"},
+
+  {cat:"Na miejscu / 0 zł (zabawy w willi)",
+   id:"olimpiada", name:"🏆 Olimpiada Hamptońska (drużyny)",
+   desc:'Drużyny 4-5 os, kilka konkurencji rozłożonych na sobotę: przeciąganie liny przez basen, sztafeta z piwem na głowie, rzut kaloszem do altany, pływanie z butelką, shooter relay. Punkty zliczane, medale z Allegro.',
+   price:0, type:"fixed", tag:"villa", on:false, status:"confirmed", priceNote:"medale z Allegro ~30 zł"},
+
+  {cat:"Na miejscu / 0 zł (zabawy w willi)",
+   id:"bilard_turniej", name:"🎱 Mistrzostwa bilardu Hamptons",
+   desc:'Drabinka eliminacyjna z formalnym losowaniem par. Można dorzucić "fee" 20 zł, zwycięzca bierze pulę albo butelkę whisky.',
+   price:0, type:"fixed", tag:"villa", on:false, status:"confirmed", priceNote:"willa ma stół"},
+
+  {cat:"Na miejscu / 0 zł (zabawy w willi)",
+   id:"beerpong", name:"🍺 Beer Pong / Flip Cup turniej",
+   desc:'Stół z kuchni + 12 kubków + 4 piłeczki = setup za ~30 zł. Drużyny 2v2, drabinka. Wieczorem przy kominku.',
+   price:0, type:"fixed", tag:"villa", on:false, status:"confirmed", priceNote:"setup ~30 zł (kubki, piłki)"},
+
+  {cat:"Na miejscu / 0 zł (zabawy w willi)",
+   id:"strongman", name:"💪 Strongman Challenge",
+   desc:'Przeciąganie liny, najdłuższa sauna, pompki na czas, zatrzymanie oddechu pod wodą w basenie. Tylko jajcarska kompetycja, nikt nikogo nie obraża kondycją.',
+   price:0, type:"fixed", tag:"villa", on:false, status:"confirmed"},
+
+  {cat:"Na miejscu / 0 zł (zabawy w willi)",
+   id:"inicjacja", name:"🔥 Ceremonia Inicjacji PM (7 prób)",
+   desc:'Świadek przygotowuje rytuał: PM zalicza 7 prób w trakcie wieczoru – shot Mocnego Tajnego, jedzenie z zawiązanymi oczami, śpiew żonie przez telefon, taniec z miotłą, skok do basenu w garniturze. Każdy test = pieczątka/tatuaż na ramieniu.',
+   price:0, type:"fixed", tag:"villa", on:false, status:"confirmed", priceNote:"przygotowanie: świadek, ~50 zł na rekwizyty"},
+
+  {cat:"Na miejscu / 0 zł (zabawy w willi)",
+   id:"murder_mystery", name:"🕵️ Murder Mystery Dinner",
+   desc:'Gotowe scenariusze z internetu (np. "Murder at the Manor"). Każdy dostaje postać i scenariusz, w trakcie kolacji się odgrywa, jest morderstwo, trzeba zgadnąć. Whisky, sygara, kominek – klimat 500 m² willi idealny.',
+   price:0, type:"fixed", tag:"villa", on:false, status:"confirmed", priceNote:"gotowe scenariusze za 0 zł online"},
+
+  {cat:"Na miejscu / 0 zł (zabawy w willi)",
+   id:"escape_villa", name:"🔍 Domowy Escape Room",
+   desc:'Świadek + 1 osoba przygotowuje grę po willi: zagadki w pokojach, ukryte klucze, każda zagadka prowadzi do następnej. Finał: kto da PM dziś najwięcej shotów. Przygotowanie 2-3h, daje 90 min świetnej gry.',
+   price:0, type:"fixed", tag:"villa", on:false, status:"confirmed", priceNote:"przygotowanie 2-3h przez 1-2 osoby"},
+
+  {cat:"Na miejscu / 0 zł (zabawy w willi)",
+   id:"time_capsule", name:"📜 Time Capsule / Słoik Pamięci",
+   desc:'Każdy zapisuje na kartce list "do PM za 10 lat" – radę, przepowiednię, żart. Wszystkie kartki do słoika, słoik zapieczętowany, otwarty na 10. rocznicę ślubu. Ognisko, whisky, klimat.',
+   price:0, type:"fixed", tag:"villa", on:false, status:"confirmed", priceNote:"słoik + kartki = 10 zł"},
+
+  {cat:"Na miejscu / 0 zł (zabawy w willi)",
+   id:"whisky_blind", name:"🥃 Blind Whisky Tasting",
+   desc:'Kupcie 4-5 whisky w różnych cenach (30/80/150/300 zł). Każda do oznaczonej szklanki A-E. Wszyscy zgadują, która jest najdroższa. PM ocenia zwycięzcę. Wynik zwykle zaskakujący.',
+   price:0, type:"fixed", tag:"villa", on:false, status:"confirmed", priceNote:"butelki: ~600 zł na całość, dzielone w grupie"},
+
+  {cat:"Na miejscu / 0 zł (zabawy w willi)",
+   id:"burger_battle", name:"🍔 Burger Battle (drużyny)",
+   desc:'2-3 drużyny dostają takie same składniki (mięso, bułki, dodatki, sosy) i robią swojego "ultimate burger". Jury (PM + 2 osoby) ocenia ślepo. Zwycięska drużyna nie zmywa.',
+   price:0, type:"fixed", tag:"villa", on:false, status:"confirmed", priceNote:"składniki w cenie zakupów na pobyt"},
+
+  {cat:"Na miejscu / 0 zł (zabawy w willi)",
+   id:"pizza_off", name:"🍕 Pizza Off (turniej w piekarniku)",
+   desc:'Drużyny robią własne pizze ze wspólnych składników, jury ślepo ocenia. Tanio, śmiesznie, jedzenie się nie marnuje.',
+   price:0, type:"fixed", tag:"villa", on:false, status:"confirmed"},
+
+  {cat:"Na miejscu / 0 zł (zabawy w willi)",
+   id:"disco_2000", name:"💿 Dyskoteka 2000 (nostalgia mix)",
+   desc:'Playlista hitów gimnazjum/liceum: Britney, Backstreet Boys, Ich Troje, Doda, Linkin Park. Wieczór ma cofać do 2003 roku, nie być nowoczesny. Każdy daje 2-3 utwory, świadek miksuje.',
+   price:0, type:"fixed", tag:"villa", on:false, status:"confirmed", priceNote:"Spotify + głośnik z willi"},
+
+  {cat:"Na miejscu / 0 zł (zabawy w willi)",
+   id:"wieczor_wspomnien", name:"📸 Wieczór wspomnień (sala kinowa)",
+   desc:'Każdy przyniósł zdjęcie/film z PM z dawnych czasów (liceum, studia, pierwsze imprezy). Projektor / sala kinowa. Komentarze, śmiech, łzy. 1 anegdota na zdjęcie.',
+   price:0, type:"fixed", tag:"villa", on:false, status:"confirmed", priceNote:"zdjęcia od każdego z ekipy"},
+
+  {cat:"Na miejscu / 0 zł (zabawy w willi)",
+   id:"reklamy_quiz", name:"📺 Quiz \"Reklamy z lat 90\"",
+   desc:'Pokazujecie reklamy z YouTube (Hortex, Frugo, Soyamilki, Tymbark) bez audio – drużyny zgadują markę. Genialne dla 30-latków, pełna nostalgia.',
+   price:0, type:"fixed", tag:"villa", on:false, status:"confirmed", priceNote:"YouTube + projektor"},
 
   // ======= ZWIEDZANIE =======
   {cat:"Zwiedzanie / chillout",
