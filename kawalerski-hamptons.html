@@ -63,6 +63,17 @@ h1{font-size:1.6rem;font-weight:800;margin-bottom:4px;color:#fff}
 .attr-card .note{color:#f59e0b;font-size:.72rem;margin-left:32px;margin-top:-4px;margin-bottom:6px}
 .attr-card .contact{color:#7dd3fc;font-size:.72rem;margin-left:32px;margin-top:2px;margin-bottom:6px;font-family:ui-monospace,Consolas,monospace}
 
+.attr-details{display:none;background:rgba(0,0,0,.22);border-radius:6px;padding:10px 14px;margin:4px 0 8px 32px;font-size:.82rem;line-height:1.6;color:#cbd5e1;border-left:2px solid var(--accent)}
+.attr-details.open{display:block}
+.attr-details strong{color:#fff}
+.attr-details em{color:#7dd3fc;font-style:normal;font-weight:600}
+.attr-details ul{margin:5px 0 5px 16px;padding:0;list-style:disc}
+.attr-details li{margin-bottom:3px;color:#cbd5e1}
+.attr-details h4{color:#fbbf24;font-size:.85rem;margin:8px 0 4px;font-weight:700}
+.attr-details h4:first-child{margin-top:0}
+.details-toggle{background:none;border:none;color:var(--accent);font-size:.78rem;cursor:pointer;padding:2px 0 6px;margin-left:32px;text-align:left;display:block;font-weight:600}
+.details-toggle:hover{text-decoration:underline}
+
 .status-badge{display:inline-block;font-size:.62rem;font-weight:700;letter-spacing:.05em;padding:2px 7px;border-radius:4px;text-transform:uppercase;margin-left:6px;vertical-align:middle}
 .status-confirmed{background:rgba(74,222,128,.2);color:#4ade80;border:1px solid rgba(74,222,128,.4)}
 .status-estimated{background:rgba(245,158,11,.18);color:#fbbf24;border:1px solid rgba(245,158,11,.4)}
@@ -406,11 +417,6 @@ const ATTRACTIONS = [
    price:0, type:"fixed", tag:"villa", on:false, status:"confirmed"},
 
   {cat:"Na miejscu / 0 zł (zabawy w willi)",
-   id:"inicjacja", name:"🔥 Ceremonia Inicjacji PM (7 prób)",
-   desc:'Świadek przygotowuje rytuał: PM zalicza 7 prób w trakcie wieczoru – shot Mocnego Tajnego, jedzenie z zawiązanymi oczami, śpiew żonie przez telefon, taniec z miotłą, skok do basenu w garniturze. Każdy test = pieczątka/tatuaż na ramieniu.',
-   price:0, type:"fixed", tag:"villa", on:false, status:"confirmed", priceNote:"przygotowanie: świadek, ~50 zł na rekwizyty"},
-
-  {cat:"Na miejscu / 0 zł (zabawy w willi)",
    id:"murder_mystery", name:"🕵️ Murder Mystery Dinner",
    desc:'Gotowe scenariusze z internetu (np. "Murder at the Manor"). Każdy dostaje postać i scenariusz, w trakcie kolacji się odgrywa, jest morderstwo, trzeba zgadnąć. Whisky, sygara, kominek – klimat 500 m² willi idealny.',
    price:0, type:"fixed", tag:"villa", on:false, status:"confirmed", priceNote:"gotowe scenariusze za 0 zł online"},
@@ -455,6 +461,150 @@ const ATTRACTIONS = [
    desc:'Pokazujecie reklamy z YouTube (Hortex, Frugo, Soyamilki, Tymbark) bez audio – drużyny zgadują markę. Genialne dla 30-latków, pełna nostalgia.',
    price:0, type:"fixed", tag:"villa", on:false, status:"confirmed", priceNote:"YouTube + projektor"},
 
+  // ======= RYTUAŁY I SCENARIUSZE (PRZYGOTUJ WCZEŚNIEJ) =======
+  {cat:"🎭 Rytuały i scenariusze (przygotuj wcześniej)",
+   id:"rytual_przejscia", name:"🔥 Rytuał Przejścia – 7 prób Pana Młodego",
+   desc:'Klasyk w wersji "od kawalera do męża". PM musi w ciągu weekendu zaliczyć 7 prób – każda z innym żywiołem/cechą. Drużba prowadzi "księgę prób" – pieczątki/podpisy świadków po każdej. Finał: pasowanie na męża przy ognisku.',
+   price:0, type:"fixed", tag:"villa", on:false, status:"confirmed", priceNote:"przygotowanie: krzesiwo (20 zł), korona z szyszek/Allegro, księga A5",
+   details:`<h4>7 prób (przykładowe):</h4><ul>
+<li><strong>Próba ognia</strong> – sam rozpala ognisko bez zapalniczki (krzesiwo / starter magnezowy z Allegro za 20 zł)</li>
+<li><strong>Próba wody</strong> – skok do basenu/jeziora w garniturze albo jacuzzi z lodem</li>
+<li><strong>Próba siły</strong> – 50 pompek przy oklaskach albo przeciąganie liny z 3 najmocniejszymi</li>
+<li><strong>Próba wiedzy</strong> – quiz "Jak dobrze znasz przyszłą żonę?" (pytania nagrane wcześniej od narzeczonej, każda zła odpowiedź = shot)</li>
+<li><strong>Próba odwagi</strong> – nieznany shot z 5 składników wymyślonych przez ekipę albo zimny prysznic + bania</li>
+<li><strong>Próba honoru</strong> – wygłasza przed wszystkimi mowę o tym, czego się nauczył od każdego z chłopaków (po imieniu)</li>
+<li><strong>Próba milczenia</strong> – godzina bez słowa, każde słowo = kara (shot albo zadanie)</li>
+</ul><h4>Finał:</h4>Po ostatniej próbie – uroczyste <em>"pasowanie na męża"</em> przy ognisku, np. szablą drewnianą, z koroną z szyszek/liści. <strong>Nagraj i pokaż na weselu.</strong>`},
+
+  {cat:"🎭 Rytuały i scenariusze (przygotuj wcześniej)",
+   id:"bingo_kawalerskie", name:"🎯 Bingo Kawalerskie – karta dla każdego",
+   desc:'Drukujesz 19 kart bingo 5×5, każdy dostaje własną. Pola = rzeczy, które mają się WYDARZYĆ na kawalerskim. Kto pierwszy zbije rządek/całość – wygrywa (np. nie płaci za bania, dostaje koszulkę "MVP").',
+   price:0, type:"fixed", tag:"villa", on:false, status:"confirmed", priceNote:"druk 19 kart na kartonie + ewentualne laminowanie",
+   details:`<h4>Przykładowe pola na karcie:</h4><ul>
+<li>Ktoś wpadł do basenu w ubraniu</li>
+<li>Pan młody powiedział imię narzeczonej przez sen / zadzwonił do niej po 2:00</li>
+<li>Ktoś zwymiotował (z imieniem)</li>
+<li>Zrobiliście zdjęcie grupowe w samych ręcznikach</li>
+<li>Ktoś zgubił telefon</li>
+<li>Ktoś zasnął przed 23:00 (typowanie z góry kogo)</li>
+<li>Zjedliście całą paczkę kiełbasy przy ognisku</li>
+<li>Drużba wygłosił mowę &gt;5 min</li>
+<li>Wykonaliście 3 shoty pod rząd</li>
+<li>Ktoś zaśpiewał karaoke "Zenek Martyniuk"</li>
+<li>Pan młody przegrał w bilarda</li>
+<li>Sauna &gt;90°C</li>
+<li>Ktoś użył słowa "ślub" &gt;10 razy</li>
+<li>Wszedł ktoś nieznajomy (sąsiad / kurier / strip)</li>
+</ul><em>Środkowe pole = "free"</em> (np. "Pan młody powiedział TAK") – automatycznie zaliczone.`},
+
+  {cat:"🎭 Rytuały i scenariusze (przygotuj wcześniej)",
+   id:"scavenger_hunt", name:"📦 Scavenger Hunt – Misje Tajne w kopertach",
+   desc:'Każdy losuje na początku weekendu 3 koperty z misjami do wykonania w trakcie 48h. Punkty + nagroda dla zwycięzcy (zwolniony z mycia, pierwszy shot, koszulka "Łowca").',
+   price:0, type:"fixed", tag:"villa", on:false, status:"confirmed", priceNote:"57 kopert (19 os × 3) + wydrukowane misje",
+   details:`<h4>Łatwe (1 pkt):</h4><ul>
+<li>Zrób selfie z każdym uczestnikiem osobno</li>
+<li>Powiedz toast w obcym języku</li>
+<li>Zjedz kiełbasę bez użycia rąk</li>
+<li>Wygraj w bilarda przeciwko Panu Młodemu</li>
+</ul><h4>Średnie (3 pkt):</h4><ul>
+<li>Sprzedaj coś sąsiadowi (cokolwiek, za jakąkolwiek kwotę – przynieś dowód)</li>
+<li>Nakłoń PM do zatańczenia solo przed całą ekipą</li>
+<li>Wymień się ubraniem z innym uczestnikiem na minimum 1h</li>
+<li>Wymyśl drinka i nazwij imieniem narzeczonej, podaj wszystkim</li>
+</ul><h4>Trudne (5 pkt):</h4><ul>
+<li>Zrób zdjęcie z lokalnym mieszkańcem Huty Podgórnej (musi być świadek)</li>
+<li>Zorganizuj 5-minutowy stand-up roastujący PM</li>
+<li>Wejdź do Zalewu Zegrzyńskiego (maj – woda zimna jak cholera)</li>
+<li>Zrób zmywalny tatuaż imienia narzeczonej w widocznym miejscu na 24h</li>
+</ul>`},
+
+  {cat:"🎭 Rytuały i scenariusze (przygotuj wcześniej)",
+   id:"lodolamacz", name:"🤝 Lodołamacz: \"Znajdź kogoś kto...\"",
+   desc:'Karta dla każdego, 16 pól, każdy musi w ciągu pierwszych 2h znaleźć osobę z ekipy spełniającą kryterium i zebrać podpis. Świetne jeśli nie wszyscy się dobrze znają (mieszanka znajomych PM z różnych etapów życia).',
+   price:0, type:"fixed", tag:"villa", on:false, status:"confirmed", priceNote:"druk 19 kart + długopisy",
+   details:`<h4>Przykładowe pola "...kto":</h4><ul>
+<li>...ma więcej niż 2 dzieci</li>
+<li>...był na więcej niż 3 kawalerskich</li>
+<li>...kiedyś spał w samochodzie</li>
+<li>...nigdy nie był u dentysty w wieku dorosłym</li>
+<li>...zna PM &gt;15 lat</li>
+<li>...poznał PM ostatnio (poniżej roku)</li>
+<li>...ma tatuaż w nieoczywistym miejscu</li>
+<li>...był w więcej niż 10 krajach</li>
+<li>...kiedyś złamał kość przez głupotę</li>
+<li>...wie o PM najbardziej kompromitującą historię (musi opowiedzieć)</li>
+</ul><strong>Nagroda:</strong> pierwszy z pełną kartą dostaje przywilej <em>"wybierz piosenkę / wybierz shot dla kogoś"</em>.`},
+
+  {cat:"🎭 Rytuały i scenariusze (przygotuj wcześniej)",
+   id:"kosci_hanby", name:"🎲 Kości Hańby (Dice of Shame)",
+   desc:'Dwie duże drewniane kości (z Allegro ~30 zł), opisane markerem. Rzut co godzinę albo na komendę "KOŚCI!". Świetne na sobotę po południu, gdy energia spada.',
+   price:0, type:"fixed", tag:"villa", on:false, status:"confirmed", priceNote:"2 drewniane kości z Allegro ~30 zł + marker permanentny",
+   details:`<h4>Kość 1 – KTO:</h4><ul>
+<li>Pan Młody</li>
+<li>Drużba</li>
+<li>Najstarszy</li>
+<li>Najmłodszy</li>
+<li>Ostatnio przybyły</li>
+<li>Wybiera rzucający</li>
+</ul><h4>Kość 2 – CO:</h4><ul>
+<li>Shot</li>
+<li>Pompki ×20</li>
+<li>Karaoke (jedna piosenka)</li>
+<li>Skok do basenu</li>
+<li>Bania ×10 min</li>
+<li>Opowiedz najbardziej żenującą historię</li>
+</ul><strong>Mechanika:</strong> rzucasz – kombo musi być wykonane natychmiast. Kto odmawia – kara × 2.`},
+
+  {cat:"🎭 Rytuały i scenariusze (przygotuj wcześniej)",
+   id:"karty_narzeczonej", name:"💌 Karty zadań od narzeczonej",
+   desc:'Klasyk z elementem wzruszenia. Narzeczona wysyła wcześniej do drużby zalakowaną kopertę z 10 zadaniami dla PM. Drużba wyciąga losowo, PM musi wykonać. Zadania osobiste, znane tylko jej i jemu.',
+   price:0, type:"fixed", tag:"villa", on:false, status:"confirmed", priceNote:"dogadaj się z narzeczoną 2 tygodnie wcześniej",
+   details:`<h4>Przykładowe zadania (od narzeczonej):</h4><ul>
+<li>Zaśpiewaj naszą pierwszą piosenkę</li>
+<li>Zatańcz z kimś tak jak na naszej drugiej randce</li>
+<li>Powiedz publicznie 3 rzeczy, które obiecasz mi do ślubu</li>
+<li>Opowiedz historię naszego pierwszego pocałunku</li>
+<li>Zrób minę, którą zrobiłeś, gdy się oświadczyłeś</li>
+</ul><strong>Po co:</strong> element wzruszenia balansujący chamstwo reszty zabaw. Pamiątkowe momenty na film weselny.`},
+
+  {cat:"🎭 Rytuały i scenariusze (przygotuj wcześniej)",
+   id:"sad_kawalerski", name:"⚖️ Sąd nad Kawalerem",
+   desc:'Wieczorem przy ognisku – formalny "proces" PM za "porzucenie stanu kawalerskiego". Drużba = sędzia, jeden chłopak = prokurator, inny = obrońca. Świadkowie z ekipy. Każdy zarzut = shot albo zadanie. Im sztywniej tym śmieszniej.',
+   price:0, type:"fixed", tag:"villa", on:false, status:"confirmed", priceNote:"toga z koca, młotek z drewna, korona/szarfa MĄŻ z Allegro",
+   details:`<h4>Role:</h4><ul>
+<li><strong>Sędzia</strong> = drużba (toga z koca + drewniany młotek)</li>
+<li><strong>Prokurator</strong> = jeden chłopak – wymyśla absurdalne zarzuty</li>
+<li><strong>Obrońca</strong> = inny chłopak – broni jak może</li>
+<li><strong>Świadkowie</strong> = reszta ekipy, wzywani po kolei</li>
+</ul><h4>Przykładowe zarzuty:</h4><ul>
+<li>"Oskarżony porzuca chłopaków na rzecz teściowej"</li>
+<li>"Oskarżony przestał odpisywać po 22:00"</li>
+<li>"Oskarżony nazywa narzeczoną 'kotek' przy świadkach"</li>
+<li>"Oskarżony rezygnuje z piwa po treningu na rzecz wody z cytryną"</li>
+</ul><strong>Wyrok końcowy:</strong> <em>"skazany na dożywocie ze swoją wybranką"</em> + nałożenie korony / szarfy MĄŻ.<br>Każdy zarzut udowodniony = shot lub zadanie dla PM.`},
+
+  {cat:"🎭 Rytuały i scenariusze (przygotuj wcześniej)",
+   id:"checklist_zakupy", name:"🛒 CHECKLIST – co kupić zawczasu",
+   desc:'Lista rzeczy do zamówienia z Allegro 2 tygodnie przed kawalerskim, żeby rytuały zadziałały bez improwizacji. Suma ~250-350 zł rozłożone na 19 osób = ~15-20 zł/os.',
+   price:0, type:"fixed", tag:"must", on:false, status:"confirmed", priceNote:"zamów 2 tygodnie wcześniej z Allegro",
+   details:`<h4>Karty i papier (~50 zł):</h4><ul>
+<li>Karty bingo i scavenger hunt – wydrukuj na kartonie 19 kopii każdej, koszulki / laminowanie</li>
+<li>57 kopert na misje (19 os × 3)</li>
+<li>Zeszyt A5 jako "Księga Prób Pana Młodego – kawalerski 2026"</li>
+</ul><h4>Rekwizyty (~100 zł):</h4><ul>
+<li>2 drewniane kości + marker permanentny (~30 zł)</li>
+<li>Korona/szarfa "MĄŻ" dla PM (~25 zł)</li>
+<li>Krzesiwo / starter magnezowy na próbę ognia (~20 zł)</li>
+<li>Toga z koca i młotek drewniany (sędzia) – z domu lub Allegro</li>
+</ul><h4>Nagrody (~150 zł):</h4><ul>
+<li>Koszulki "MVP kawalerskiego", "Łowca", "Sędzia" – printio.pl, 30-40 zł sztuka, zamów 5-7 różnych</li>
+<li>Medale na olimpiadę z Allegro (~30 zł za zestaw)</li>
+</ul><h4>Współpraca z narzeczoną:</h4><ul>
+<li>Wideo nagranie z pytaniami quizu o PM (próba wiedzy)</li>
+<li>Zalakowana koperta z 10 osobistymi zadaniami</li>
+<li>Wcześniejszy briefing kogo zaprosić, kto nie pija itp.</li>
+</ul>`},
+
   // ======= ZWIEDZANIE =======
   {cat:"Zwiedzanie / chillout",
    id:"twierdza_zegrze", name:'<a href="https://www.forty.waw.pl/index.php/twierdza-zegrze/forty-twierdzy-zegrze/300-fort-beniaminow" target="_blank">Twierdza Zegrze / Fort Beniaminów</a>',
@@ -484,6 +634,14 @@ const ATTRACTIONS = [
 ];
 
 let breakdownOpen = false;
+let expandedDetails = new Set();
+
+function toggleDetails(id, ev) {
+  ev.stopPropagation();
+  if (expandedDetails.has(id)) expandedDetails.delete(id);
+  else expandedDetails.add(id);
+  render();
+}
 
 function tagLabel(t){
   const map = {'water':'woda','adrenaline':'adrenalina','villa':'w willi','warsaw':'Warszawa','chill':'chill','must':'must-have'};
@@ -507,6 +665,7 @@ function render() {
       const unit = a.type === 'per_person' ? 'zł/os' : 'zł';
       const statusLabel = a.status === 'confirmed' ? 'potwierdzone' : a.status === 'estimated' ? 'orientacyjne' : 'brak cennika';
       const statusBadge = a.status ? `<span class="status-badge status-${a.status}" title="${statusLabel}">${statusLabel}</span>` : '';
+      const isExpanded = expandedDetails.has(a.id);
       html += `<div class="attr-card${checked?' checked':''}" onclick="toggleAttr('${a.id}', event)">
         <div class="attr-head">
           <div class="attr-check"><svg viewBox="0 0 13 13" fill="none"><path d="M2 6.5l3 3L11 3.5" stroke="#0f1923" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
@@ -515,6 +674,8 @@ function render() {
         <div class="attr-desc">${a.desc}</div>
         ${a.priceNote ? `<div class="note">${a.priceNote}</div>` : ''}
         ${a.contact ? `<div class="contact">☎ ${a.contact}</div>` : ''}
+        ${a.details ? `<div class="attr-details${isExpanded?' open':''}">${a.details}</div>
+          <button class="details-toggle" onclick="toggleDetails('${a.id}', event)">${isExpanded?'▴ Schowaj szczegóły':'▾ Pokaż szczegóły / instrukcję'}</button>` : ''}
         <div class="attr-bottom">
           <div class="attr-price" onclick="event.stopPropagation()">
             <input type="number" class="attr-price-input" value="${a.price}" min="0" step="10" onchange="updatePrice('${a.id}', this.value)">
